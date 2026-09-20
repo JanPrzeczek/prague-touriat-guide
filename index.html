@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PraguePulse – Oficiální Průvodce a Bezpečnostní Asistent</title>
+    <title>PraguePulse – Premium Tourist Guide & Safety Assistant</title>
     <style>
         :root {
-            --bg-color: #FAF9F6;
+            --bg-color: #FAF9F5;
             --text-primary: #0F172A;
             --text-secondary: #475569;
             --card-radius: 20px;
             
-            /* Jemné pastelové odstíny */
+            /* Moderní pastelové odstíny */
             --pastel-red: #FFE4E6;
             --pastel-blue: #E0F2FE;
             --pastel-green: #DCFCE7;
@@ -43,7 +43,7 @@
             padding-bottom: 40px;
         }
 
-        /* Horní lišta */
+        /* Top Header */
         .top-header {
             display: flex;
             justify-content: space-between;
@@ -52,7 +52,7 @@
         }
 
         .brand-title {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 800;
             background: linear-gradient(135deg, #1E40AF, #7C3AED);
             -webkit-background-clip: text;
@@ -71,7 +71,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.03);
         }
 
-        /* Vyhledávač */
+        /* Search Bar */
         .search-box {
             width: 100%;
             padding: 14px 18px;
@@ -84,7 +84,7 @@
             outline: none;
         }
 
-        /* Rozvržení: Přesně 2 dlaždice vedle sebe */
+        /* Grid: Exactly 2 Tiles Side by Side */
         .grid-2col {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -111,7 +111,7 @@
         }
 
         .tile-icon {
-            font-size: 40px;
+            font-size: 38px;
             margin-bottom: 8px;
         }
 
@@ -129,7 +129,7 @@
             line-height: 1.3;
         }
 
-        /* Pastelové styly pro 12 dlaždic */
+        /* Background Colors */
         .bg-red     { background-color: var(--pastel-red); }
         .bg-yellow  { background-color: var(--pastel-yellow); }
         .bg-blue    { background-color: var(--pastel-blue); }
@@ -141,7 +141,7 @@
         .bg-indigo  { background-color: var(--pastel-indigo); }
         .bg-emerald { background-color: var(--pastel-emerald); }
 
-        /* PLNOÚROVŇOVÁ NABÍDKA PŘES CELÉ OKNO (FULL-SCREEN VIEW) */
+        /* FULL-SCREEN VIEW OVERLAY */
         .full-screen-view {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -184,7 +184,7 @@
             font-weight: 800;
         }
 
-        /* Filtry */
+        /* Filter elements */
         .filter-select {
             width: 100%;
             padding: 12px;
@@ -197,7 +197,7 @@
             outline: none;
         }
 
-        /* Obsahové karty v detailu */
+        /* Cards inside Full View */
         .content-card {
             background: white;
             border: 1px solid #E2E8F0;
@@ -220,11 +220,17 @@
             font-size: 13px;
             color: var(--text-secondary);
             line-height: 1.4;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
         }
 
         .card-link {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             background: var(--primary-accent);
             color: white;
             text-decoration: none;
@@ -232,6 +238,19 @@
             border-radius: 8px;
             font-size: 12px;
             font-weight: 600;
+        }
+
+        .card-link-alt {
+            display: inline-flex;
+            align-items: center;
+            background: #F1F5F9;
+            color: #334155;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #CBD5E1;
         }
 
         .badge-warning {
@@ -257,7 +276,7 @@
 </head>
 <body>
 
-    <!-- Horní Lišta Aplikace -->
+    <!-- Header -->
     <div class="top-header">
         <h1 class="brand-title">PraguePulse</h1>
         <select class="lang-select" id="langSelect" onchange="changeLanguage()">
@@ -270,10 +289,10 @@
         </select>
     </div>
 
-    <!-- Vyhledávání -->
+    <!-- Search input -->
     <input type="text" class="search-box" id="globalSearch" placeholder="Vyhledat v celém průvodci..." onkeyup="filterTiles()">
 
-    <!-- Mřížka: Přesně 2 Dlaždice Vedle Sebe (12 Sekcí) -->
+    <!-- 12 Key Tiles in 2-Column Layout -->
     <div class="grid-2col" id="tilesGrid">
         
         <div class="tile bg-red" onclick="openView('scams')">
@@ -350,7 +369,7 @@
 
     </div>
 
-    <!-- PLNOÚROVŇOVÁ NABÍDKA PŘES CELOU OBRAZOVKU -->
+    <!-- FULL-SCREEN VIEW OVERLAY -->
     <div class="full-screen-view" id="fullScreenView">
         <div class="view-header">
             <button class="back-btn" id="backBtn" onclick="closeView()">← Zpět</button>
@@ -363,12 +382,13 @@
     <script>
         let currentLang = 'cs';
 
-        // Kompletní Slovník Pro 6 Jazyků (CS, EN, DE, FR, ES, IT)
+        // Complete Translations for 6 Languages
         const i18n = {
             cs: {
                 search_ph: "Vyhledat v celém průvodci...",
                 back: "← Zpět do nabídky",
-                open_link: "Otevřít službu / odkaz",
+                open_link: "Oficiální web",
+                open_map: "Navigovat v mapě",
                 title_scams: "Pasti & Varování", sub_scams: "Směnárny, taxi, trdelníky",
                 title_doprava: "Doprava & MHD", sub_doprava: "Lítačka, vlaky, taxi, P+R",
                 title_sport: "Sport & Aktivita", sub_sport: "Zápasy, běh, kola, Vltava",
@@ -385,7 +405,8 @@
             en: {
                 search_ph: "Search across the guide...",
                 back: "← Back to menu",
-                open_link: "Open link / service",
+                open_link: "Official website",
+                open_map: "Navigate on map",
                 title_scams: "Traps & Warnings", sub_scams: "Exchange, taxi, scams",
                 title_doprava: "Transport & Public", sub_doprava: "Passes, trains, taxi, P+R",
                 title_sport: "Sports & Active", sub_sport: "Matches, running, bikes, river",
@@ -402,7 +423,8 @@
             de: {
                 search_ph: "Suchen Sie im Reiseführer...",
                 back: "← Zurück zum Menü",
-                open_link: "Link / Dienst öffnen",
+                open_link: "Offizielle Website",
+                open_map: "Auf Karte navigieren",
                 title_scams: "Fallen & Warnungen", sub_scams: "Wechselstuben, Taxis",
                 title_doprava: "Transport & ÖPNV", sub_doprava: "Tickets, Züge, Taxi, P+R",
                 title_sport: "Sport & Aktiv", sub_sport: "Spiele, Laufen, Rad, Moldau",
@@ -419,7 +441,8 @@
             fr: {
                 search_ph: "Rechercher dans le guide...",
                 back: "← Retour au menu",
-                open_link: "Ouvrir le lien / service",
+                open_link: "Site officiel",
+                open_map: "Naviguer sur carte",
                 title_scams: "Pièges & Avertissements", sub_scams: "Change, taxi, arnaques",
                 title_doprava: "Transports Publics", sub_doprava: "Billets, trains, taxi, P+R",
                 title_sport: "Sports & Activités", sub_sport: "Matchs, course, vélo, Moldau",
@@ -436,7 +459,8 @@
             es: {
                 search_ph: "Buscar en la guía...",
                 back: "← Volver al menú",
-                open_link: "Abrir enlace / servicio",
+                open_link: "Sitio web oficial",
+                open_map: "Navegar en mapa",
                 title_scams: "Trampas & Advertencias", sub_scams: "Cambio, taxi, estafas",
                 title_doprava: "Transporte Público", sub_doprava: "Billetes, trenes, taxi, P+R",
                 title_sport: "Deportes & Activo", sub_sport: "Partidos, correr, bicis, Moldava",
@@ -453,7 +477,8 @@
             it: {
                 search_ph: "Cerca nella guida...",
                 back: "← Torna al menu",
-                open_link: "Apri link / servizio",
+                open_link: "Sito ufficiale",
+                open_map: "Naviga sulla mappa",
                 title_scams: "Trappole & Avvisi", sub_scams: "Cambiovaluta, taxi, truffe",
                 title_doprava: "Trasporti Pubblici", sub_doprava: "Biglietti, treni, taxi, P+R",
                 title_sport: "Sport & Attività", sub_sport: "Partite, corsa, bici, Moldava",
@@ -469,57 +494,57 @@
             }
         };
 
-        // Databáze všech sekcí
+        // Comprehensive Database with Guaranteed Domain Roots and Google Maps Links
         const db = {
             scams: [
-                { name: "Nevýhodné směnárny (Euronet / Centrum)", desc: "POZOR na směnárny kolem Staroměstského náměstí s poplatky až 28 % nebo nevýhodným kurzem. Používejte proverené směnárny (např. Mango Exchange na Jindřišské).", tag: "Kritické varování" },
+                { name: "Nevýhodné směnárny (Centrum & Euronet)", desc: "POZOR na směnárny kolem Staroměstského náměstí s poplatky až 28 % nebo nevýhodným kurzem. Používejte proverené směnárny (Mango Exchange / Alfa Exchange na Jindřišské).", tag: "Kritické varování", map: "https://www.google.com/maps/search/Mango+Exchange+Prague" },
                 { name: "Falešní revizoři v metro stanicích", desc: "Revizor DPP musí mít odznak a průkaz. Vždy vyžadujte předložení služebního průkazu. Pokutu neplaťte v hotovosti bez oficiálního stvrzenkového dokladu.", tag: "Bezpečnost" },
                 { name: "Předražené jídlo na váhu (Staroměstské nám.)", desc: "Stánky se šunkou uvádí cenu např. 100 CZK za 100g, ale naservírují vám 700g porci a požadují přes 700 CZK. Předem specifikujte přesnou váhu.", tag: "Gastro past" },
                 { name: "Předražené pouliční trdelníky", desc: "Trdelník není tradiční pražský pokrm. Běžná cena v pekárně je do 70 CZK, v turistickém centru zaplatíte i 180 CZK.", tag: "Cenová past" }
             ],
             doprava: {
-                mhd: [{ name: "PID Lítačka (Oficiální Aplikace)", desc: "Jízdenka zakoupená v aplikaci platí až 2 minuty po aktivaci!", url: "https://pid.cz" }],
-                vlaky: [{ name: "České dráhy & Nádraží", desc: "Hlavní a Masarykovo nádraží.", url: "https://www.cd.cz" }],
-                taxi: [{ name: "Liftago / Bolt / Uber", desc: "Oficiální cenový strop města je 36 Kč/km.", url: "https://www.liftago.cz" }],
-                p_r: [{ name: "Záchytná parkoviště P+R & MPLA", desc: "Levné parkování u metra (50–100 Kč/den).", url: "https://pid.cz/parkovani-pr/" }]
+                mhd: [{ name: "PID Lítačka (Oficiální Aplikace)", desc: "Jízdenka zakoupená v aplikaci platí až 2 minuty po aktivaci!", url: "https://www.pid.cz", map: "https://www.google.com/maps/search/Prague+Public+Transport" }],
+                vlaky: [{ name: "České dráhy & Hlavní nádraží", desc: "Národní železniční dopravce a hlavní vlakový terminál.", url: "https://www.cd.cz", map: "https://www.google.com/maps/search/Hlavni+nadrazi+Prague" }],
+                taxi: [{ name: "Liftago / Bolt / Uber", desc: "Oficiální cenový strop města stanovený magistrátem je 36 Kč/km.", url: "https://www.liftago.cz" }],
+                p_r: [{ name: "Záchytná parkoviště P+R & MPLA", desc: "Levné parkování u metra (50–100 Kč/den) s aplikací MPLA.", url: "https://www.pid.cz", map: "https://www.google.com/maps/search/P%2BR+parking+Prague" }]
             },
             sport: [
-                { name: "Fotbalové zápasy (AC Sparta & SK Slavia)", desc: "Lístky na zápasy v epet ARENĚ (Letná) nebo Fortuna Areně (Eden).", url: "https://www.sparta.cz" },
-                { name: "Hokej v O2 Areně (HC Sparta Praha)", desc: "Největší hokejová aréna v ČR.", url: "https://www.o2arena.cz" },
-                { name: "Běh & Inline v parcích (Stromovka & Ladronka)", desc: "Nejlepší asfaltové a přírodní okruhy v Praze pro sportovce zdarma.", url: "https://www.prague.eu" },
-                { name: "Paddleboardy & Kajaky na Vltavě", desc: "Půjčovny na Náplavce a Císařské louce.", url: "https://www.vltava-s-usmevem.cz" }
+                { name: "Fotbalové zápasy (AC Sparta & SK Slavia)", desc: "Oficiální ligové a evropské zápasy v epet ARENĚ (Letná) nebo Fortuna Areně (Eden).", url: "https://www.sparta.cz", map: "https://www.google.com/maps/search/epet+ARENA+Prague" },
+                { name: "Hokej v O2 Areně (HC Sparta Praha)", desc: "Největší hokejová aréna v ČR a mezinárodní zápasy.", url: "https://www.o2arena.cz", map: "https://www.google.com/maps/search/O2+Arena+Prague" },
+                { name: "Běh & Inline v parcích (Stromovka & Ladronka)", desc: "Nejlepší asfaltové a přírodní okruhy v Praze pro sportovce zdarma.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/Stromovka+Park+Prague" },
+                { name: "Paddleboardy & Kajaky na Vltavě", desc: "Půjčovny a sportovní vyžití na Náplavce a Císařské louce.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/Naplavka+Prague" }
             ],
             uschovna: [
-                { name: "Bounce & Radical Storage", desc: "Síť prověřených úschoven zavazadel v lokálních obchodech a kavárnách od 5 EUR/den.", url: "https://usebounce.com" },
-                { name: "Úschovna Hlavní nádraží & ÚAN Florenc", desc: "Samoobslužné skříňky přímo na vlakovém a autobusovém nádraží.", url: "https://www.hlavni-nadrazi.cz" }
+                { name: "Bounce & Radical Storage", desc: "Síť prověřených úschoven zavazadel v lokálních obchodech a kavárnách od 5 EUR/den.", url: "https://usebounce.com", map: "https://www.google.com/maps/search/luggage+storage+prague" },
+                { name: "Úschovna Hlavní nádraží & ÚAN Florenc", desc: "Samoobslužné skříňky přímo na vlakovém a autobusovém nádraží.", url: "https://www.cd.cz", map: "https://www.google.com/maps/search/Hlavni+nadrazi+Prague" }
             ],
             wc_voda: [
-                { name: "Mapa pítek s pitnou vodou zdarma", desc: "V centru Prahy je přes 40 pítek s čerstvou pitnou vodou zdarma.", url: "https://www.prazskekasny.cz" },
-                { name: "Veřejné toalety v metru a parcích", desc: "Standardní poplatek je 10–20 Kč (vyžaduje mince nebo bezkontaktní kartu).", url: "https://www.dpp.cz" }
+                { name: "Mapa pítek s pitnou vodou zdarma", desc: "V centru Prahy je přes 40 pítek s čerstvou pitnou vodou zdarma.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/drinking+fountain+prague" },
+                { name: "Veřejné toalety v metru a parcích", desc: "Standardní poplatek je 10–20 Kč (vyžaduje mince nebo bezkontaktní kartu).", url: "https://www.dpp.cz", map: "https://www.google.com/maps/search/public+toilet+prague" }
             ],
             smenarny: [
-                { name: "Poctivé směnárny (Mango & Alfa Exchange)", desc: "Garantovaný středový kurz ČNB bez 0% commission triků.", url: "https://www.cnb.cz" },
+                { name: "Poctivé směnárny (Mango & Alfa Exchange)", desc: "Garantovaný středový kurz ČNB bez 0% commission triků.", url: "https://www.cnb.cz", map: "https://www.google.com/maps/search/Mango+Exchange+Prague" },
                 { name: "Pravidla spropitného v ČR", desc: "Spropitné není povinné, ale běžně se dává 10 % za dobrou obsluhu.", url: "https://www.prague.eu" }
             ],
             wifi: [
-                { name: "Work-Friendly Kavárny s rychlou Wi-Fi", desc: "Kavárna co hledá jméno, SmetanaQ, Opero coworking.", url: "https://www.prague.eu" }
+                { name: "Work-Friendly Kavárny s rychlou Wi-Fi", desc: "Kavárna co hledá jméno, SmetanaQ, Opero coworking s rychlým připojením.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/SmetanaQ+Prague" }
             ],
             pohotovost: [
-                { name: "Nonstop lékárny 24/7 (Praha 1 & Praha 5)", desc: "Lékárna U Sv. Ludmily (Nám. Míru) a Lékárna Na Homolce.", url: "https://www.lekarnaludmila.cz" },
+                { name: "Nonstop lékárny 24/7 (Praha 1 & Praha 5)", desc: "Lékárna U Sv. Ludmily (Nám. Míru) a Lékárna Na Homolce.", url: "https://www.policie.cz", map: "https://www.google.com/maps/search/Lekarna+U+Sv.+Ludmily+Prague" },
                 { name: "Turistická Policie & Tísňové linky", desc: "Tísňová linka EU: 112, Policie ČR: 158, Záchranka: 155.", url: "https://www.policie.cz" }
             ],
             gastro: [
-                { name: "EMA Espresso Bar & Café Louvre", desc: "Špičková káva i historická atmosféra.", url: "https://www.cafelouvre.cz" }
+                { name: "EMA Espresso Bar & Café Louvre", desc: "Špičková káva u Masarykova nádraží i historická kavárna z roku 1902.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/Cafe+Louvre+Prague" }
             ],
             kultura: [
-                { name: "Národní divadlo & DOX Holešovice", desc: "Kultura od klasiky po současné umění.", url: "https://www.narodni-divadlo.cz" }
+                { name: "Národní divadlo & DOX Holešovice", desc: "Kultura od klasiky na Vltavském nábřeží po současné umění v Holešovicích.", url: "https://www.narodni-divadlo.cz", map: "https://www.google.com/maps/search/National+Theatre+Prague" }
             ],
             pamatky: [
-                { name: "Pražský hrad & Karlův most", desc: "Nejznámější historické dominanty.", url: "https://www.hrad.cz" }
+                { name: "Pražský hrad & Karlův most", desc: "Nejznámější historické dominanty a gotický most z roku 1357.", url: "https://www.hrad.cz", map: "https://www.google.com/maps/search/Prague+Castle" }
             ]
         };
 
-        // Přepínání jazyka
+        // Language changehandler
         function changeLanguage() {
             currentLang = document.getElementById('langSelect').value;
             const t = i18n[currentLang];
@@ -533,7 +558,7 @@
             });
         }
 
-        // Otevření Plnoúrovňové nabídky
+        // Open Full Screen View
         function openView(section) {
             const view = document.getElementById('fullScreenView');
             const title = document.getElementById('viewTitle');
@@ -580,9 +605,12 @@
                 items.forEach(item => {
                     html += `
                         <div class="content-card">
-                            <h4>${item.name}</h4>
+                            <h4>${item.name} ${item.tag ? `<span class="badge-warning">${item.tag}</span>` : ''}</h4>
                             <p>${item.desc}</p>
-                            ${item.url ? `<a href="${item.url}" target="_blank" class="card-link">${t.open_link}</a>` : ''}
+                            <div class="card-actions">
+                                ${item.url ? `<a href="${item.url}" target="_blank" class="card-link">${t.open_link}</a>` : ''}
+                                ${item.map ? `<a href="${item.map}" target="_blank" class="card-link-alt">${t.open_map}</a>` : ''}
+                            </div>
                         </div>
                     `;
                 });
@@ -606,7 +634,10 @@
                     <div class="content-card">
                         <h4>${item.name}</h4>
                         <p>${item.desc}</p>
-                        ${item.url ? `<a href="${item.url}" target="_blank" class="card-link">${t.open_link}</a>` : ''}
+                        <div class="card-actions">
+                            ${item.url ? `<a href="${item.url}" target="_blank" class="card-link">${t.open_link}</a>` : ''}
+                            ${item.map ? `<a href="${item.map}" target="_blank" class="card-link-alt">${t.open_map}</a>` : ''}
+                        </div>
                     </div>
                 `;
             });
