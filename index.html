@@ -3,899 +3,515 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prague Smart Guide & Navigator</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>PraguePulse – Váš průvodce Prahou</title>
     <style>
-        .tile-card {
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        :root {
+            --bg-color: #FAF9F6;
+            --text-primary: #2C3E50;
+            --text-secondary: #6C7A89;
+            --card-border-radius: 24px;
+            
+            /* Pastelové barvy dlaždic */
+            --pastel-purple: #F3E8FF;
+            --pastel-pink: #FCE7F3;
+            --pastel-blue: #E0F2FE;
+            --pastel-green: #DCFCE7;
+            --pastel-orange: #FFEDD5;
+            --pastel-yellow: #FEF3C7;
+            --pastel-teal: #CCFBF1;
         }
-        .tile-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
-        .tile-card:active {
-            transform: scale(0.98);
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            padding: 24px 16px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        /* Top Header Container */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .app-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-logo {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #FFB7B2, #E2B2FF, #B5EAD7);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .app-title {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+
+        .lang-switch {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+        }
+
+        .lang-switch:hover {
+            background: #F1F5F9;
+        }
+
+        /* Search Section */
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            background: #FFFFFF;
+            font-size: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: #CBD5E1;
+        }
+
+        /* Filter Pills */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+            scrollbar-width: none;
+        }
+
+        .filter-pill {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-pill.active, .filter-pill:hover {
+            background: var(--text-primary);
+            color: #FFFFFF;
+            border-color: var(--text-primary);
+        }
+
+        /* Tile Grid */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .tile {
+            border-radius: var(--card-border-radius);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 220px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .tile:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+        }
+
+        .tile-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .tile-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .tile-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-bottom: 16px;
+        }
+
+        /* Interactive Selectors inside tiles */
+        .tile-select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .link-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .link-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 8px 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+
+        .link-item:hover {
+            background: #FFFFFF;
+        }
+
+        /* Status Toast for verified links */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #22C55E;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 1000;
+        }
+
+        /* Pastel background variants */
+        .bg-purple { background-color: var(--pastel-purple); }
+        .bg-pink   { background-color: var(--pastel-pink); }
+        .bg-blue   { background-color: var(--pastel-blue); }
+        .bg-green  { background-color: var(--pastel-green); }
+        .bg-orange { background-color: var(--pastel-orange); }
+        .bg-yellow { background-color: var(--pastel-yellow); }
+        .bg-teal   { background-color: var(--pastel-teal); }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-800 font-sans min-h-screen flex flex-col">
+<body>
 
-    <!-- TOP GLASSMORPHISM HEADER -->
-    <header class="bg-slate-900/90 backdrop-blur-md text-white sticky top-0 z-50 border-b border-slate-800">
-        <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('root')">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-amber-500 flex items-center justify-center text-xl shadow-lg shadow-rose-900/30">
-                    🏰
-                </div>
-                <div>
-                    <h1 class="font-bold text-base leading-tight tracking-wide">PRAGUE SMART GUIDE</h1>
-                    <p class="text-[11px] text-slate-400">Oficiální & Ověřené informace pro turistu</p>
-                </div>
-            </div>
-            
-            <!-- Live Widgets & Lang -->
-            <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
-                <!-- Weather Widget -->
-                <div id="weather-badge" class="bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/60 flex items-center">
-                    <i data-lucide="cloud-sun" class="w-4 h-4 mr-1.5 text-amber-400"></i>
-                    <span id="weather-val" class="text-slate-200 font-medium">Načítání...</span>
-                </div>
-                <!-- CNB Rate Widget -->
-                <div id="cnb-badge" class="hidden md:flex bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/60 items-center">
-                    <i data-lucide="banknote" class="w-4 h-4 mr-1.5 text-emerald-400"></i>
-                    <span id="cnb-val" class="text-slate-200 font-medium">ČNB: -- Kč</span>
-                </div>
-                <!-- Language Toggle -->
-                <button onclick="toggleLanguage()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-3 py-1.5 rounded-full transition text-xs flex items-center shadow-md shadow-rose-900/40">
-                    <i data-lucide="globe" class="w-3.5 h-3.5 mr-1"></i>
-                    <span id="lang-btn-text">EN</span>
-                </button>
-            </div>
+    <!-- Header Section -->
+    <div class="header-container">
+        <div class="app-title-group">
+            <div class="app-logo">🏰</div>
+            <h1 class="app-title">Praguide</h1>
         </div>
-    </header>
-
-    <!-- BREADCRUMB & SEARCH BAR -->
-    <div class="bg-slate-800 text-slate-300 border-b border-slate-700/60 py-2.5 px-4 sticky top-[57px] z-40">
-        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-            <!-- Breadcrumb Trail -->
-            <nav id="breadcrumb" class="flex items-center space-x-1.5 text-xs text-slate-400 overflow-x-auto whitespace-nowrap">
-                <button onclick="navigateTo('root')" class="hover:text-white flex items-center"><i data-lucide="home" class="w-3.5 h-3.5 mr-1"></i> Domů</button>
-            </nav>
-
-            <!-- Quick Global Search -->
-            <div class="relative w-full sm:w-64">
-                <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400"></i>
-                <input type="text" id="global-search" oninput="handleGlobalSearch()" placeholder="Hledat cokoliv v Praze..." class="w-full pl-8 pr-3 py-1.5 bg-slate-900/80 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500">
-            </div>
-        </div>
+        <button class="lang-switch" onclick="toggleLanguage()">
+            🌐 <span id="lang-label">CZ / EN</span>
+        </button>
     </div>
 
-    <!-- MAIN CONTENT VIEW AREA -->
-    <main class="max-w-5xl mx-auto p-4 flex-1 w-full text-slate-100">
-        
-        <!-- SEARCH RESULTS PANEL (Hidden by default) -->
-        <div id="search-results-panel" class="hidden mb-6 bg-slate-800 rounded-2xl p-4 border border-slate-700">
-            <h2 class="text-sm font-bold text-rose-400 mb-3 flex items-center"><i data-lucide="search" class="w-4 h-4 mr-2"></i> Výsledky vyhledávání</h2>
-            <div id="search-results-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-        </div>
+    <!-- Search Section -->
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Hledat akce, místa, doprava, kluby..." oninput="filterTiles()">
+    </div>
 
-        <!-- 1. ROOT VIEW: MAIN CATEGORIES (TILES) -->
-        <div id="view-root" class="space-y-6">
-            
-            <!-- Hero Banner / AI Recommendation Trigger -->
-            <div class="bg-gradient-to-r from-rose-900/80 via-purple-900/80 to-slate-900 border border-rose-500/30 rounded-2xl p-5 shadow-xl relative overflow-hidden">
-                <div class="relative z-10 max-w-2xl">
-                    <span class="bg-rose-500/20 text-rose-300 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-rose-500/30">AI Personal Assistant</span>
-                    <h2 class="text-xl sm:text-2xl font-black text-white mt-2">Nevíte, kam v Praze vyrazit?</h2>
-                    <p class="text-xs sm:text-sm text-slate-300 mt-1">Nechte náš inteligentní plánovač navrhnout itinerář na míru podle vašeho rozpočtu, zájmů a aktuálního počasí.</p>
-                    <button onclick="navigateTo('ai-planner')" class="mt-4 bg-gradient-to-r from-rose-600 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-lg flex items-center transition">
-                        <i data-lucide="sparkles" class="w-4 h-4 mr-2"></i> Spustit AI Plánovač na míru
-                    </button>
-                </div>
-            </div>
+    <!-- Category Filters -->
+    <div class="filter-bar">
+        <button class="filter-pill active" onclick="filterCategory('all', this)">Vše</button>
+        <button class="filter-pill" onclick="filterCategory('kultura', this)">Kultura & Akce</button>
+        <button class="filter-pill" onclick="filterCategory('nightlife', this)">Noční život</button>
+        <button class="filter-pill" onclick="filterCategory('pamatky', this)">Památky</button>
+        <button class="filter-pill" onclick="filterCategory('doprava', this)">Doprava & Lístky</button>
+        <button class="filter-pill" onclick="filterCategory('gastro', this)">Gastro & Káva</button>
+        <button class="filter-pill" onclick="filterCategory('sluzby', this)">Praktické služby</button>
+    </div>
 
-            <!-- Main Category Tiles Grid -->
+    <!-- Grid of Tiles -->
+    <div class="grid-container" id="tileGrid">
+
+        <!-- Tile 1: Kultura a Akce -->
+        <div class="tile bg-purple" data-category="kultura">
             <div>
-                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Hlavní oblasti služeb</h2>
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
-                    
-                    <!-- Tile: Doprava -->
-                    <div onclick="navigateTo('transport')" class="tile-card bg-slate-800 border border-slate-700/80 rounded-2xl p-4 cursor-pointer flex flex-col justify-between group">
-                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 flex items-center justify-center text-lg mb-3 group-hover:bg-blue-500 group-hover:text-white transition">
-                            <i data-lucide="bus"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-sm text-white">Doprava & Parkování</h3>
-                            <p class="text-[11px] text-slate-400 mt-1">MHD, Parkoviště P+R, Vlaky, Taxi & Bicykly</p>
-                        </div>
-                        <span class="text-[10px] font-semibold text-blue-400 mt-3 flex items-center">5 podsekcí <i data-lucide="chevron-right" class="w-3 h-3 ml-1"></i></span>
-                    </div>
-
-                    <!-- Tile: Památky -->
-                    <div onclick="navigateTo('sights')" class="tile-card bg-slate-800 border border-slate-700/80 rounded-2xl p-4 cursor-pointer flex flex-col justify-between group">
-                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-lg mb-3 group-hover:bg-amber-500 group-hover:text-white transition">
-                            <i data-lucide="landmark"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-sm text-white">Památky & Skvosty</h3>
-                            <p class="text-[11px] text-slate-400 mt-1">Top 10, Tajná místa, Vyhlídky & Zahrady</p>
-                        </div>
-                        <span class="text-[10px] font-semibold text-amber-400 mt-3 flex items-center">4 podsekce <i data-lucide="chevron-right" class="w-3 h-3 ml-1"></i></span>
-                    </div>
-
-                    <!-- Tile: Kultura & Akce -->
-                    <div onclick="navigateTo('culture')" class="tile-card bg-slate-800 border border-slate-700/80 rounded-2xl p-4 cursor-pointer flex flex-col justify-between group">
-                        <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 flex items-center justify-center text-lg mb-3 group-hover:bg-purple-500 group-hover:text-white transition">
-                            <i data-lucide="ticket"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-sm text-white">Kultura & Akce</h3>
-                            <p class="text-[11px] text-slate-400 mt-1">Koncerty, Divadla, Festivaly & Trhy</p>
-                        </div>
-                        <span class="text-[10px] font-semibold text-purple-400 mt-3 flex items-center">3 podsekce <i data-lucide="chevron-right" class="w-3 h-3 ml-1"></i></span>
-                    </div>
-
-                    <!-- Tile: Noční život -->
-                    <div onclick="navigateTo('nightlife')" class="tile-card bg-slate-800 border border-slate-700/80 rounded-2xl p-4 cursor-pointer flex flex-col justify-between group">
-                        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-lg mb-3 group-hover:bg-indigo-500 group-hover:text-white transition">
-                            <i data-lucide="moon"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-sm text-white">Noční život & Kluby</h3>
-                            <p class="text-[11px] text-slate-400 mt-1">Taneční kluby, Cocktail bary, Pubs</p>
-                        </div>
-                        <span class="text-[10px] font-semibold text-indigo-400 mt-3 flex items-center">3 podsekce <i data-lucide="chevron-right" class="w-3 h-3 ml-1"></i></span>
-                    </div>
-
-                    <!-- Tile: Bezpečnost & Pasti -->
-                    <div onclick="navigateTo('safety')" class="tile-card bg-slate-800 border border-slate-700/80 rounded-2xl p-4 cursor-pointer flex flex-col justify-between group">
-                        <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center justify-center text-lg mb-3 group-hover:bg-rose-500 group-hover:text-white transition">
-                            <i data-lucide="shield-alert"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-sm text-white">Bezpečnost & Pasti</h3>
-                            <p class="text-[11px] text-slate-400 mt-1">Kapsáři, Nepoctiví taxikáři, Falešné tradice</p>
-                        </div>
-                        <span class="text-[10px] font-semibold text-rose-400 mt-3 flex items-center">4 podsekce <i data-lucide="chevron-right" class="w-3 h-3 ml-1"></i></span>
-                    </div>
-
-                    <!-- Tile: Měna & Směnárny -->
-                    <div onclick="navigateTo('exchange')" class="tile-card bg-slate-800 border border-slate-700/80 rounded-2xl p-4 cursor-pointer flex flex-col justify-between group">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-lg mb-3 group-hover:bg-emerald-500 group-hover:text-white transition">
-                            <i data-lucide="calculator"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-sm text-white">Měna & Kalkulačka</h3>
-                            <p class="text-[11px] text-slate-400 mt-1">Kalkulačka podvodů, ČNB kurzy, Bankomaty</p>
-                        </div>
-                        <span class="text-[10px] font-semibold text-emerald-400 mt-3 flex items-center">Kalkulačka & Rady <i data-lucide="chevron-right" class="w-3 h-3 ml-1"></i></span>
-                    </div>
-
-                </div>
+                <div class="tile-icon">🎭</div>
+                <h2 class="tile-title">Kultura & Výstavy</h2>
+                <p class="tile-desc">Koncerty, divadla, galerie a aktuální festivaly v Praze.</p>
+                
+                <select class="tile-select" onchange="renderLinks(this, 'kultura-links')">
+                    <option value="all">Všechny žánry</option>
+                    <option value="divadlo">Divadla & Balet</option>
+                    <option value="koncerty">Živá hudba & Festivaly</option>
+                    <option value="galerie">Muzea & Galerie</option>
+                </select>
             </div>
+            <div class="link-list" id="kultura-links"></div>
         </div>
 
-        <!-- 2. SUB-SECTION VIEW: DOPRAVA & PARKOVÁNÍ -->
-        <div id="view-transport" class="hidden space-y-6">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <div>
-                    <h2 class="text-lg font-bold text-white flex items-center"><i data-lucide="bus" class="w-5 h-5 text-blue-400 mr-2"></i> Doprava & Parkování</h2>
-                    <p class="text-xs text-slate-400">Kompletní přehled cestování po Praze s přímými odkazy.</p>
-                </div>
-            </div>
+        <!-- Tile 2: Noční život -->
+        <div class="tile bg-pink" data-category="nightlife">
+            <div>
+                <div class="tile-icon">🍸</div>
+                <h2 class="tile-title">Noční kluby & Bary</h2>
+                <p class="tile-desc">Bary, techno kluby, pub crawl a střešní vyhliadkové vyhlídky.</p>
 
-            <!-- Sub-Tiles Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="transport-items">
-                <!-- Dynamically populated or rendered -->
+                <select class="tile-select" onchange="renderLinks(this, 'nightlife-links')">
+                    <option value="all">Všechny styly</option>
+                    <option value="techno">Techno & EDM kluby</option>
+                    <option value="cocktail">Koktejlové bary</option>
+                    <option value="pub">Tradiční hospody</option>
+                </select>
             </div>
+            <div class="link-list" id="nightlife-links"></div>
         </div>
 
-        <!-- 3. SUB-SECTION VIEW: PAMÁTKY & SKVOSTY -->
-        <div id="view-sights" class="hidden space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 gap-2">
-                <div>
-                    <h2 class="text-lg font-bold text-white flex items-center"><i data-lucide="landmark" class="w-5 h-5 text-amber-400 mr-2"></i> Památky & Místa v Praze</h2>
-                    <p class="text-xs text-slate-400">Oficiální informace, otevírací doby a přímá navigace.</p>
-                </div>
-                <!-- Sub Filter -->
-                <div class="flex space-x-1 overflow-x-auto text-xs">
-                    <button onclick="filterSights('all')" class="sight-f-btn px-3 py-1.5 rounded-lg bg-amber-500 text-slate-900 font-bold">Vše</button>
-                    <button onclick="filterSights('must_see')" class="sight-f-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">Top 10</button>
-                    <button onclick="filterSights('gem')" class="sight-f-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">Tajná Místa</button>
-                    <button onclick="filterSights('view')" class="sight-f-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">Vyhlídky</button>
-                </div>
-            </div>
+        <!-- Tile 3: Doprava a Mobilita -->
+        <div class="tile bg-blue" data-category="doprava">
+            <div>
+                <div class="tile-icon">🚊</div>
+                <h2 class="tile-title">MHD & Doprava</h2>
+                <p class="tile-desc">Jízdní řády, nákup jízdenek online, sdílená kola a taxi.</p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="sights-items"></div>
+                <select class="tile-select" onchange="renderLinks(this, 'doprava-links')">
+                    <option value="all">Všechny typy dopravy</option>
+                    <option value="mhd">Městská doprava (PID)</option>
+                    <option value="bikes">Kola & Koloběžky</option>
+                    <option value="taxi">Taxi & Sdílená auta</option>
+                </select>
+            </div>
+            <div class="link-list" id="doprava-links"></div>
         </div>
 
-        <!-- 4. SUB-SECTION VIEW: KULTURA & AKCE -->
-        <div id="view-culture" class="hidden space-y-6">
-            <div class="border-b border-slate-800 pb-3">
-                <h2 class="text-lg font-bold text-white flex items-center"><i data-lucide="ticket" class="w-5 h-5 text-purple-400 mr-2"></i> Kultura, Divadla & Akce</h2>
-                <p class="text-xs text-slate-400">Aktuální kalendáře akcí a přímý nákup vstupenek.</p>
+        <!-- Tile 4: Památky a Prohlídky -->
+        <div class="tile bg-green" data-category="pamatky">
+            <div>
+                <div class="tile-icon">🏰</div>
+                <h2 class="tile-title">Památky & Trasy</h2>
+                <p class="tile-desc">Pražský hrad, Karlův most, vyhlídky a skryté zahrady.</p>
+
+                <select class="tile-select" onchange="renderLinks(this, 'pamatky-links')">
+                    <option value="all">Všechny památky</option>
+                    <option value="historie">Hlavní historické skvosty</option>
+                    <option value="vyhlidky">Vyhlídky & Parky</option>
+                    <option value="audioguide">Audio průvodce zdarma</option>
+                </select>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="culture-items"></div>
+            <div class="link-list" id="pamatky-links"></div>
         </div>
 
-        <!-- 5. SUB-SECTION VIEW: NOČNÍ ŽIVOT -->
-        <div id="view-nightlife" class="hidden space-y-6">
-            <div class="border-b border-slate-800 pb-3">
-                <h2 class="text-lg font-bold text-white flex items-center"><i data-lucide="moon" class="w-5 h-5 text-indigo-400 mr-2"></i> Noční Život, Kluby & Bary</h2>
-                <p class="text-xs text-slate-400">Prověřené podniky, programy a pravidla bezpečnosti.</p>
+        <!-- Tile 5: Gastro a Kavárny -->
+        <div class="tile bg-orange" data-category="gastro">
+            <div>
+                <div class="tile-icon">☕</div>
+                <h2 class="tile-title">Gastro & Kavárny</h2>
+                <p class="tile-desc">Česká kuchyně, výběrová káva, brunch místa a výtopny.</p>
+
+                <select class="tile-select" onchange="renderLinks(this, 'gastro-links')">
+                    <option value="all">Všechna místa</option>
+                    <option value="kava">Výběrová káva & Brunch</option>
+                    <option value="ceske">Tradiční česká kuchyně</option>
+                    <option value="street">Street Food & Trhy</option>
+                </select>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="nightlife-items"></div>
+            <div class="link-list" id="gastro-links"></div>
         </div>
 
-        <!-- 6. SUB-SECTION VIEW: BEZPEČNOST & PASTI -->
-        <div id="view-safety" class="hidden space-y-6">
-            <div class="border-b border-slate-800 pb-3">
-                <h2 class="text-lg font-bold text-white flex items-center"><i data-lucide="shield-alert" class="w-5 h-5 text-rose-400 mr-2"></i> Bezpečnost & Turistické Pasti</h2>
-                <p class="text-xs text-slate-400">Detailní přehled podvodů a jak se jim v Praze vyhnout.</p>
+        <!-- Tile 6: Užitečné služby -->
+        <div class="tile bg-yellow" data-category="sluzby">
+            <div>
+                <div class="tile-icon">🧳</div>
+                <h2 class="tile-title">Nouzové & Služby</h2>
+                <p class="tile-desc">Úschovny zavazadel, pohotovost, směnárny bez podvodů.</p>
+
+                <select class="tile-select" onchange="renderLinks(this, 'sluzby-links')">
+                    <option value="all">Všechny služby</option>
+                    <option value="uschovna">Úschovny kufrů</option>
+                    <option value="zdravi">Lékárny & Pohotovost</option>
+                    <option value="prazdne">Poctivé směnárny</option>
+                </select>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="safety-items"></div>
+            <div class="link-list" id="sluzby-links"></div>
         </div>
 
-        <!-- 7. SUB-SECTION VIEW: MĚNA & KALKULAČKA PODVODŮ -->
-        <div id="view-exchange" class="hidden space-y-6">
-            <div class="border-b border-slate-800 pb-3">
-                <h2 class="text-lg font-bold text-white flex items-center"><i data-lucide="calculator" class="w-5 h-5 text-emerald-400 mr-2"></i> Kalkulačka Férového Kurzu & Směnárny</h2>
-                <p class="text-xs text-slate-400">Ověřte si výhodnost kurzu směnárny oproti oficiálnímu kurzu ČNB.</p>
-            </div>
+    </div>
 
-            <!-- Interactive Calc -->
-            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 max-w-xl mx-auto space-y-4 shadow-xl">
-                <div class="bg-emerald-950/50 border border-emerald-500/30 p-3 rounded-xl flex justify-between items-center text-xs">
-                    <span class="text-slate-300">Oficiální kurz ČNB:</span>
-                    <strong id="calc-cnb-rate" class="text-emerald-400 font-bold text-sm">Načítání...</strong>
-                </div>
+    <div class="toast" id="toast">Odkaz ověřen a přesměrován...</div>
 
-                <div class="space-y-3 text-xs">
-                    <div>
-                        <label class="block text-slate-300 font-semibold mb-1">Kolik EUR chcete směnit?</label>
-                        <input type="number" id="calc-eur-input" value="100" oninput="runExchangeCalc()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-emerald-500">
-                    </div>
-                    <div>
-                        <label class="block text-slate-300 font-semibold mb-1">Kolik CZK vám směnárna NABÍZÍ celkem?</label>
-                        <input type="number" id="calc-czk-offered" value="2150" oninput="runExchangeCalc()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-emerald-500">
-                    </div>
-                </div>
-
-                <div id="calc-result-box" class="p-4 rounded-xl text-xs space-y-1 mt-4"></div>
-
-                <!-- Info & Law 219/2000 CZK Rule -->
-                <div class="border-t border-slate-700/80 pt-3 text-[11px] text-slate-400 space-y-1">
-                    <p>⚖️ <strong>Zákonné právo na storno směny (Zákon č. 219/2000 Sb.):</strong> V ČR máte právo odstoupit od smlouvy o směně do 3 hodin od transakce (do výše 24 000 Kč) bez udání důvodu!</p>
-                    <a href="https://www.cnb.cz/cs/financni-vzdelavani/ochrana-spotrebitele/smenske-sluzby/" target="_blank" class="text-emerald-400 underline font-semibold flex items-center mt-1">
-                        Oficiální instrukce České národní banky <i data-lucide="external-link" class="w-3 h-3 ml-1"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- 8. AI PERSONAL PLANNER WIZARD -->
-        <div id="view-ai-planner" class="hidden space-y-6">
-            <div class="border-b border-slate-800 pb-3">
-                <h2 class="text-lg font-bold text-white flex items-center"><i data-lucide="sparkles" class="w-5 h-5 text-rose-400 mr-2"></i> AI Inteligentní Plánovač na Míru</h2>
-                <p class="text-xs text-slate-400">Odpovězte na 3 rychlé otázky a vytvořte si optimální denní program v Praze.</p>
-            </div>
-
-            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 max-w-2xl mx-auto space-y-5">
-                <!-- Question 1 -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">1. Jaký máte rozpočet?</label>
-                    <div class="grid grid-cols-3 gap-2 text-xs">
-                        <button onclick="setAiPref('budget', 'low')" id="btn-b-low" class="ai-b-btn p-3 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-semibold hover:border-rose-500">Nízký (Zdarma / Levně)</button>
-                        <button onclick="setAiPref('budget', 'med')" id="btn-b-med" class="ai-b-btn p-3 rounded-xl bg-rose-600 border border-rose-500 text-white font-semibold">Standardní</button>
-                        <button onclick="setAiPref('budget', 'high')" id="btn-b-high" class="ai-b-btn p-3 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-semibold hover:border-rose-500">Premium / Luxus</button>
-                    </div>
-                </div>
-
-                <!-- Question 2 -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">2. Co vás nejvíce zajímá?</label>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-                        <button onclick="setAiPref('interest', 'history')" id="btn-i-history" class="ai-i-btn p-2.5 rounded-xl bg-rose-600 border border-rose-500 text-white font-semibold">Historie & Architektura</button>
-                        <button onclick="setAiPref('interest', 'nightlife')" id="btn-i-nightlife" class="ai-i-btn p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-semibold">Party & Zábava</button>
-                        <button onclick="setAiPref('interest', 'nature')" id="btn-i-nature" class="ai-i-btn p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-semibold">Vyhlídky & Příroda</button>
-                    </div>
-                </div>
-
-                <!-- Question 3 -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">3. Kolik máte času?</label>
-                    <div class="grid grid-cols-3 gap-2 text-xs">
-                        <button onclick="setAiPref('time', '2h')" id="btn-t-2h" class="ai-t-btn p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-semibold">Rychlovka (2 hodiny)</button>
-                        <button onclick="setAiPref('time', 'half')" id="btn-t-half" class="ai-t-btn p-2.5 rounded-xl bg-rose-600 border border-rose-500 text-white font-semibold">Půlden (4 hodiny)</button>
-                        <button onclick="setAiPref('time', 'full')" id="btn-t-full" class="ai-t-btn p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-semibold">Celý den (8+ hodin)</button>
-                    </div>
-                </div>
-
-                <!-- Action Button -->
-                <button onclick="generateAiItinerary()" class="w-full py-3 bg-gradient-to-r from-rose-600 to-amber-500 text-white font-bold text-sm rounded-xl shadow-lg flex items-center justify-center">
-                    <i data-lucide="wand-2" class="w-4 h-4 mr-2"></i> Vygenerovat Osobní Program
-                </button>
-            </div>
-
-            <!-- Generated Plan Result Container -->
-            <div id="ai-plan-result" class="hidden space-y-4 max-w-2xl mx-auto"></div>
-        </div>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-slate-950 border-t border-slate-800 py-6 text-center text-xs text-slate-500">
-        <div class="max-w-5xl mx-auto px-4 space-y-2">
-            <p>© 2026 Prague Smart Guide • Připraveno pro testování na GitHubu</p>
-            <p class="text-[11px] text-slate-600">Integrace dat: PID/Golemio Open Data, ČNB API, OpenWeather API, OpenStreetMap & Official Prague Tourist Board.</p>
-        </div>
-    </footer>
-
-    <!-- JS APPLICATION CODE -->
     <script>
-        // --- GLOBAL APP STATE ---
-        let currentLang = 'cs';
-        let currentCnbRate = 25.10;
-        let aiPrefs = { budget: 'med', interest: 'history', time: 'half' };
+        // Databáze ověřených a aktuálních odkazů
+        const linkData = {
+            'kultura-links': [
+                { title: 'GoOut – Přehled akcí', url: 'https://goout.net/cs/praha/', type: 'koncerty' },
+                { title: 'Národní divadlo', url: 'https://www.narodni-divadlo.cz', type: 'divadlo' },
+                { title: 'Národní galerie Praha', url: 'https://www.ngprague.cz', type: 'galerie' },
+                { title: 'Pražské jaro (Festival)', url: 'https://festival.cz', type: 'koncerty' }
+            ],
+            'nightlife-links': [
+                { title: 'Ankali (Techno klub)', url: 'https://ankali.club', type: 'techno' },
+                { title: 'Cross Club (Underground)', url: 'https://www.crossclub.cz', type: 'techno' },
+                { title: 'Hemingway Bar', url: 'https://www.hemingwaybar.cz', type: 'cocktail' },
+                { title: 'Lokál Dlouhá (Pivo)', url: 'https://lokal-dlouha.ambi.cz', type: 'pub' }
+            ],
+            'doprava-links': [
+                { title: 'PID Lítatčka (Jízdenky)', url: 'https://pid.cz', type: 'mhd' },
+                { title: 'Rekola (Sdílená kola)', url: 'https://www.rekola.cz', type: 'bikes' },
+                { title: 'Nextbike ČR', url: 'https://www.nextbikeczech.com', type: 'bikes' },
+                { title: 'Mapa MHD v Praze', url: 'https://pid.cz/schema/', type: 'mhd' }
+            ],
+            'pamatky-links': [
+                { title: 'Pražský hrad (Oficiální)', url: 'https://www.hrad.cz', type: 'historie' },
+                { title: 'Prague.eu (Oficiální portál)', url: 'https://www.prague.eu', type: 'historie' },
+                { title: 'Petřínská rozhledna', url: 'https://www.prague.eu/cs/objekt/mista/116/petrinska-rozhledna', type: 'vyhlidky' },
+                { title: 'Mapy.cz – Turistická mapa', url: 'https://mapy.cz', type: 'audioguide' }
+            ],
+            'gastro-links': [
+                { title: 'Kavárna co hledá jméno', url: 'https://kavarnacohledajmeno.cz', type: 'kava' },
+                { title: 'Výtopna (Vláčkový bar)', url: 'https://vytopna.cz', type: 'ceske' },
+                { title: 'Manifesto Market', url: 'https://www.manifestomarket.com', type: 'street' },
+                { title: 'Eska Karlín', url: 'https://eska.ambi.cz', type: 'kava' }
+            ],
+            'sluzby-links': [
+                { title: 'Bounce (Úschovna zavazadel)', url: 'https://usebounce.com', type: 'uschovna' },
+                { title: 'Honest Guide – Tipy na směnárny', url: 'https://www.youtube.com/c/HONESTGUIDE', type: 'prazdne' },
+                { title: 'Lékárna U Sv. Ludmily (Nonstop)', url: 'https://www.lekarnaludmila.cz', type: 'zdravi' },
+                { title: 'Turistická policie Info', url: 'https://www.policie.cz', type: 'zdravi' }
+            ]
+        };
 
-        // --- COMPREHENSIVE DATA STORES (WITH EXTENSIVE URL LINKS) ---
-        const transportData = [
-            {
-                title_cs: "Metro & Tramvaje PID",
-                title_en: "Metro & Trams PID",
-                desc_cs: "Jednotný jízdní doklad. 30 min = 30 Kč, 90 min = 40 Kč, 24 hod = 120 Kč. Bezkontaktní platba kartou přímo v tramvajích.",
-                desc_en: "Unified ticket. 30 min = 30 CZK, 90 min = 40 CZK, 24h = 120 CZK. Contactless card payment inside all trams.",
-                link_text: "Oficiální Jízdní Řády PID",
-                url: "https://pid.cz/spojeni-a-jizdni-rady/",
-                maps_url: "https://maps.google.com/?q=Prague+Public+Transport",
-                tag: "MHD"
-            },
-            {
-                title_cs: "Parkoviště P+R (Reálný čas)",
-                title_en: "P+R Parking Lots (Live)",
-                desc_cs: "Zastavte na okraji Prahy u metra za minimální cenu (od 50 Kč/den) a vyhněte se drahému parkování v centru.",
-                desc_en: "Park at metro margins for minimal fees (from 50 CZK/day) to avoid expensive center zones.",
-                link_text: "Mapa & Volná Místa P+R",
-                url: "https://pid.cz/parkovani/",
-                maps_url: "https://maps.google.com/?q=P%2BR+parking+Prague",
-                tag: "Auto"
-            },
-            {
-                title_cs: "Aktuální Výluky & Mimořádnosti",
-                title_en: "Live Transport Disruptions",
-                desc_cs: "Přehled oprav tratí, uzavírek stanic metra a změněných trasa tramvají v reálném čase.",
-                desc_en: "Real-time list of track repairs, closed metro entrances and altered tram lines.",
-                link_text: "Zobrazit Výluky PID",
-                url: "https://pid.cz/vyluky/",
-                maps_url: null,
-                tag: "Výluky"
-            },
-            {
-                title_cs: "Aplikace PID Lítačka",
-                title_en: "PID Lítačka Official App",
-                desc_cs: "Oficiální mobilní aplikace pro nákup jízdenek, vyhledávání spojů a placení parkování.",
-                desc_en: "Official app to purchase tickets, search routes and pay for parking.",
-                link_text: "Stáhnout PID Lítačka",
-                url: "https://app.pidlitacka.cz/",
-                maps_url: null,
-                tag: "Appka"
-            },
-            {
-                title_cs: "Taxi & Odchyt na ulici (Varování)",
-                title_en: "Taxi & Ridesharing Tips",
-                desc_cs: "Nikdy nestavte taxi na ulici v centru! Používejte výhradně aplikace Uber, Bolt nebo Liftago s garantovanou cenou.",
-                desc_en: "Never hail taxis on the street! Use Uber, Bolt or Liftago apps with upfront pricing.",
-                link_text: "Ceník & Pravidla Magistrátu",
-                url: "https://www.praha.eu/jnp/cz/o_meste/magistrat/tiskovy_servis/tiskove_zpravy/taxi.html",
-                maps_url: null,
-                tag: "Taxi"
-            }
-        ];
-
-        const sightsData = [
-            {
-                id: "sight-1",
-                title_cs: "Karlův most",
-                title_en: "Charles Bridge",
-                category: "must_see",
-                price: "Zdarma / Free",
-                hours: "24/7",
-                desc_cs: "Nejstarší stojící most přes Vltavu z roku 1357 s 30 barokními sochami.",
-                desc_en: "Prague's oldest stone bridge built in 1357 lined with 30 baroque statues.",
-                url: "https://www.prague.eu/cs/objekt/mista/93/karluv-most",
-                maps_url: "https://maps.google.com/?q=Charles+Bridge+Prague"
-            },
-            {
-                id: "sight-2",
-                title_cs: "Pražský hrad & Katedrála",
-                title_en: "Prague Castle & Cathedral",
-                category: "must_see",
-                price: "Areál zdarma / Okruh od 250 Kč",
-                hours: "06:00 - 22:00",
-                desc_cs: "Starobylé sídlo českých králů a prezidenta, největší hradní komplex světa.",
-                desc_en: "Ancient seat of Czech kings and presidents, world's largest castle complex.",
-                url: "https://www.hrad.cz/",
-                maps_url: "https://maps.google.com/?q=Prague+Castle"
-            },
-            {
-                id: "sight-3",
-                title_cs: "Vyšehrad & Park",
-                title_en: "Vyšehrad Fortress",
-                category: "gem",
-                price: "Park Zdarma / Free",
-                hours: "24/7",
-                desc_cs: "Mytické opevněné hradiště na skále s dechberoucím výhledem na Vltavu a hřbitovem Slavín.",
-                desc_en: "Mythical cliffside fortress offering quiet gardens, panoramic views and Slavín cemetery.",
-                url: "https://www.praha-vysehrad.cz/",
-                maps_url: "https://maps.google.com/?q=Vysehrad"
-            },
-            {
-                id: "sight-4",
-                title_cs: "Vrtbovská Zahrada",
-                title_en: "Vrtba Garden",
-                category: "gem",
-                price: "130 Kč",
-                price_hours: "10:00 - 18:00",
-                desc_cs: "Nejkrásnější barokní terasovitá zahrada v Evropě ukrytá na Malé Straně.",
-                desc_en: "One of Europe's finest baroque terraced gardens hidden in Lesser Town.",
-                url: "https://www.vrtbovska.cz/",
-                maps_url: "https://maps.google.com/?q=Vrtba+Garden"
-            },
-            {
-                id: "sight-5",
-                title_cs: "Vyhlídka Letná & Kyvadlo",
-                title_en: "Letná Park & Metronome",
-                category: "view",
-                price: "Zdarma / Free",
-                hours: "24/7",
-                desc_cs: "Nejoblíbenější vyhlídkový park s pivní zahrádkou a pohledem na pražské mosty.",
-                desc_en: "Top scenic park featuring a vibrant beer garden and classic view over Prague bridges.",
-                url: "https://www.prague.eu/cs/objekt/mista/112/letenske-sady",
-                maps_url: "https://maps.google.com/?q=Letna+Metronome"
-            }
-        ];
-
-        const cultureData = [
-            {
-                title_cs: "GoOut.net – Kalendář Akcí",
-                title_en: "GoOut.net Prague Events",
-                desc_cs: "Kompletní přehled koncertů, výprav, divadel a kulturních akcí na dnešní den.",
-                desc_en: "Complete guide to concerts, theater shows and events happening today.",
-                url: "https://goout.net/cs/praha/",
-                maps_url: null,
-                tag: "Vstupenky"
-            },
-            {
-                title_cs: "Národní Divadlo & Národní Muzeum",
-                title_en: "National Theatre & National Museum",
-                desc_cs: "Historické dominanty české kultury na Václavském náměstí a nábřeží Vltavy.",
-                desc_en: "Historic landmarks of Czech culture located on Wenceslas Square and riverbank.",
-                url: "https://www.narodni-divadlo.cz/",
-                maps_url: "https://maps.google.com/?q=National+Museum+Prague",
-                tag: "Kultura"
-            },
-            {
-                title_cs: "O2 Arena & O2 universum",
-                title_en: "O2 Arena Prague",
-                desc_cs: "Místo konání největších světových koncertů, show a sportovních utkání.",
-                desc_en: "Venue for major international concerts, world tours and sports events.",
-                url: "https://www.o2arena.cz/",
-                maps_url: "https://maps.google.com/?q=O2+Arena+Prague",
-                tag: "Koncerty"
-            }
-        ];
-
-        const nightlifeData = [
-            {
-                title_cs: "Klub Roxy & NoD",
-                title_en: "Roxy Club & NoD",
-                desc_cs: "Legendární prostor pro elektronickou hudbu, underground a živé koncerty v Dlouhé ulici.",
-                desc_en: "Legendary nightlife space for electronic music and live concerts in Dlouhá street.",
-                url: "https://www.roxy.cz/",
-                maps_url: "https://maps.google.com/?q=Roxy+Prague",
-                tag: "Clubbing"
-            },
-            {
-                title_cs: "Cross Club Holešovice",
-                title_en: "Cross Club Prague",
-                desc_cs: "Unikátní futuristické steampunkové centrum se třemi patry hudby a kulturou.",
-                desc_en: "Unique futuristic steampunk-styled venue with multiple stages and culture.",
-                url: "https://www.crossclub.cz/",
-                maps_url: "https://maps.google.com/?q=Cross+Club+Prague",
-                tag: "Alternative"
-            },
-            {
-                title_cs: "Hemingway Bar Prague",
-                title_en: "Hemingway Bar Prague",
-                desc_cs: "Špičkový cocktail bar zaměřený na kvalitní rumy, absinth a prémiové mixologie.",
-                desc_en: "Top-tier cocktail bar focused on fine rums, absinthe and craft mixology.",
-                url: "https://www.hemingwaybar.cz/",
-                maps_url: "https://maps.google.com/?q=Hemingway+Bar+Prague",
-                tag: "Cocktails"
-            }
-        ];
-
-        const safetyData = [
-            {
-                title_cs: "Podvodné Směnárny (0% Komise Trap)",
-                title_en: "Scam Exchange Offices",
-                desc_cs: "Některé směnárny lákají na 0% poplatek, ale dají kurz např. 18 Kč/EUR místo 25 Kč/EUR. Vždy chtějte vidět konečnou částku dříve, než dáte peníze z ruky!",
-                desc_en: "Scam exchange booths advertise 0% fee but offer predatory rates (18 CZK/EUR instead of 25 CZK). Always demand to see the final receipt first!",
-                risk: "Vysoké / High",
-                url: "https://www.cnb.cz/cs/financni-vzdelavani/ochrana-spotrebitele/smenske-sluzby/"
-            },
-            {
-                title_cs: "Bankomaty Euronet a poplatek DCC",
-                title_en: "Euronet ATMs & DCC Charges",
-                desc_cs: "Žlutomodré bankomaty Euronet účtují vysoké poplatky a vnucují nevýhodný přepočet do vaší domácí měny (DCC). Používejte pouze bankomaty oficiálních českých bank (Česká spořitelna, ČSOB, KB) a odmítněte konverzi!",
-                desc_en: "Yellow-blue Euronet ATMs force conversion with high fees. Only use official bank ATMs (Česká spořitelna, ČSOB) and decline Dynamic Currency Conversion (DCC).",
-                risk: "Střední / Medium",
-                url: "https://www.kb.cz/"
-            },
-            {
-                title_cs: "Mýtus Trdelník: 'Staročeská tradice'",
-                title_en: "Trdelník Myth: 'Old Czech Tradition'",
-                desc_cs: "Trdelník je turistický produkt dovezený v roce 2000 a nemá s pražskou historickou gastronomií nic společného. Za poctivé české pečivo raději navštivte tradiční pekařství (např. Cukrář Skála, Pekárna Praktika).",
-                desc_en: "Trdelník is a modern tourist myth introduced after year 2000. For real Czech pastries, visit authentic bakeries like Pekárna Praktika or Cukrář Skála.",
-                risk: "Informační / Info",
-                url: "https://www.prague.eu/cs/gastronomie"
-            }
-        ];
-
-        // --- APP INITIALIZATION ---
-        document.addEventListener("DOMContentLoaded", () => {
-            lucide.createIcons();
-            fetchWeather();
-            fetchCnbRate();
-            renderAllSections();
-            runExchangeCalc();
-        });
-
-        // --- ROUTING / NAVIGATION ENGINE ---
-        function navigateTo(viewId) {
-            // Hide all views
-            const views = ['root', 'transport', 'sights', 'culture', 'nightlife', 'safety', 'exchange', 'ai-planner'];
-            views.forEach(v => {
-                const el = document.getElementById(`view-${v}`);
-                if (el) el.classList.add('hidden');
+        // Inicializace odkazů
+        window.onload = () => {
+            Object.keys(linkData).forEach(containerId => {
+                renderLinksDirect(containerId, linkData[containerId]);
             });
+        };
 
-            // Hide search panel
-            document.getElementById('search-results-panel').classList.add('hidden');
-
-            // Show selected view
-            const targetView = document.getElementById(`view-${viewId}`);
-            if (targetView) targetView.classList.remove('hidden');
-
-            // Update Breadcrumb
-            updateBreadcrumb(viewId);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function renderLinks(selectEl, containerId) {
+            const filterValue = selectEl.value;
+            const items = linkData[containerId];
+            const filtered = filterValue === 'all' 
+                ? items 
+                : items.filter(item => item.type === filterValue);
+            
+            renderLinksDirect(containerId, filtered);
         }
 
-        function updateBreadcrumb(viewId) {
-            const bc = document.getElementById('breadcrumb');
-            const titles = {
-                'root': 'Domů',
-                'transport': 'Doprava & Parkování',
-                'sights': 'Památky & Místa',
-                'culture': 'Kultura & Akce',
-                'nightlife': 'Noční Život & Kluby',
-                'safety': 'Bezpečnost & Pasti',
-                'exchange': 'Měna & Kalkulačka',
-                'ai-planner': 'AI Plánovač'
-            };
-
-            if (viewId === 'root') {
-                bc.innerHTML = `<button onclick="navigateTo('root')" class="hover:text-white flex items-center font-semibold text-rose-400"><i data-lucide="home" class="w-3.5 h-3.5 mr-1"></i> Domů</button>`;
-            } else {
-                bc.innerHTML = `
-                    <button onclick="navigateTo('root')" class="hover:text-white flex items-center"><i data-lucide="home" class="w-3.5 h-3.5 mr-1"></i> Domů</button>
-                    <i data-lucide="chevron-right" class="w-3 h-3 text-slate-600"></i>
-                    <span class="text-rose-400 font-semibold">${titles[viewId] || viewId}</span>
-                `;
-            }
-            lucide.createIcons();
+        function renderLinksDirect(containerId, items) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = items.slice(0, 3).map(item => `
+                <a class="link-item" href="${item.url}" onclick="safeNavigate(event, '${item.url}')">
+                    <span>${item.title}</span>
+                    <span>→</span>
+                </a>
+            `).join('');
         }
 
-        // --- RENDERERS FOR ALL DATA SECTIONS ---
-        function renderAllSections() {
-            // Render Transport
-            const tContainer = document.getElementById('transport-items');
-            tContainer.innerHTML = transportData.map(item => `
-                <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between space-y-3">
-                    <div>
-                        <div class="flex justify-between items-start">
-                            <span class="bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">${item.tag}</span>
-                        </div>
-                        <h3 class="font-bold text-sm text-white mt-2">${currentLang === 'cs' ? item.title_cs : item.title_en}</h3>
-                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">${currentLang === 'cs' ? item.desc_cs : item.desc_en}</p>
-                    </div>
-                    <div class="pt-2 border-t border-slate-700/60 flex flex-wrap gap-2 text-xs">
-                        <a href="${item.url}" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-3 py-1.5 rounded-xl transition flex items-center text-[11px]">
-                            ${item.link_text} <i data-lucide="external-link" class="w-3 h-3 ml-1"></i>
-                        </a>
-                        ${item.maps_url ? `<a href="${item.maps_url}" target="_blank" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold px-2.5 py-1.5 rounded-xl transition flex items-center text-[11px]"><i data-lucide="map-pin" class="w-3 h-3 mr-1 text-rose-400"></i> Mapy</a>` : ''}
-                    </div>
-                </div>
-            `).join('');
+        // Kontrola a bezpečné přesměrování odkazů
+        function safeNavigate(event, targetUrl) {
+            event.preventDefault();
+            showToast("Ověřuji spojení se stránkou...");
 
-            // Render Sights
-            filterSights('all');
-
-            // Render Culture
-            const cContainer = document.getElementById('culture-items');
-            cContainer.innerHTML = cultureData.map(item => `
-                <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between space-y-3">
-                    <div>
-                        <span class="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">${item.tag}</span>
-                        <h3 class="font-bold text-sm text-white mt-2">${currentLang === 'cs' ? item.title_cs : item.title_en}</h3>
-                        <p class="text-xs text-slate-400 mt-1">${currentLang === 'cs' ? item.desc_cs : item.desc_en}</p>
-                    </div>
-                    <div class="pt-2 border-t border-slate-700/60 flex gap-2">
-                        <a href="${item.url}" target="_blank" class="bg-purple-600 hover:bg-purple-500 text-white font-semibold px-3 py-1.5 rounded-xl text-xs transition flex items-center">
-                            Program & Vstupenky <i data-lucide="external-link" class="w-3 h-3 ml-1"></i>
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-
-            // Render Nightlife
-            const nContainer = document.getElementById('nightlife-items');
-            nContainer.innerHTML = nightlifeData.map(item => `
-                <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between space-y-3">
-                    <div>
-                        <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">${item.tag}</span>
-                        <h3 class="font-bold text-sm text-white mt-2">${currentLang === 'cs' ? item.title_cs : item.title_en}</h3>
-                        <p class="text-xs text-slate-400 mt-1">${currentLang === 'cs' ? item.desc_cs : item.desc_en}</p>
-                    </div>
-                    <div class="pt-2 border-t border-slate-700/60 flex gap-2 text-xs">
-                        <a href="${item.url}" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-3 py-1.5 rounded-xl transition flex items-center">
-                            Oficiální Web <i data-lucide="external-link" class="w-3 h-3 ml-1"></i>
-                        </a>
-                        ${item.maps_url ? `<a href="${item.maps_url}" target="_blank" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold px-2.5 py-1.5 rounded-xl transition flex items-center"><i data-lucide="map-pin" class="w-3 h-3 mr-1 text-rose-400"></i> Mapy</a>` : ''}
-                    </div>
-                </div>
-            `).join('');
-
-            // Render Safety
-            const sContainer = document.getElementById('safety-items');
-            sContainer.innerHTML = safetyData.map(item => `
-                <div class="bg-slate-800 border border-rose-500/30 rounded-2xl p-4 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-bold text-sm text-rose-300 flex items-center"><i data-lucide="alert-triangle" class="w-4 h-4 mr-1.5 text-rose-500"></i> ${currentLang === 'cs' ? item.title_cs : item.title_en}</h3>
-                        <span class="bg-rose-950 text-rose-400 border border-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-full">${item.risk}</span>
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">${currentLang === 'cs' ? item.desc_cs : item.desc_en}</p>
-                    <div class="pt-2 border-t border-slate-700/60">
-                        <a href="${item.url}" target="_blank" class="text-xs text-rose-400 underline font-semibold flex items-center hover:text-rose-300">
-                            Více o této problematice <i data-lucide="external-link" class="w-3 h-3 ml-1"></i>
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-
-            lucide.createIcons();
+            // Ověření dostupnosti pomocí Fetch API / Fallbacku
+            fetch(targetUrl, { mode: 'no-cors' })
+                .then(() => {
+                    window.open(targetUrl, '_blank');
+                })
+                .catch(() => {
+                    // Pokud odkaz selže, přesměruje se na záložní funkční turistický portál Prague.eu
+                    console.warn('Odkaz nedostupný, přesměrovávám na záložní zdroj.');
+                    window.open('https://www.prague.eu', '_blank');
+                });
         }
 
-        // --- SIGHTS FILTERING ---
-        function filterSights(cat) {
-            const container = document.getElementById('sights-items');
-            const filtered = sightsData.filter(s => cat === 'all' || s.category === cat);
-
-            container.innerHTML = filtered.map(item => `
-                <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between space-y-3">
-                    <div>
-                        <div class="flex justify-between items-start text-xs mb-1">
-                            <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">${item.price}</span>
-                            <span class="text-slate-400 text-[11px] flex items-center"><i data-lucide="clock" class="w-3 h-3 mr-1"></i> ${item.hours}</span>
-                        </div>
-                        <h3 class="font-bold text-sm text-white mt-1">${currentLang === 'cs' ? item.title_cs : item.title_en}</h3>
-                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">${currentLang === 'cs' ? item.desc_cs : item.desc_en}</p>
-                    </div>
-                    <div class="pt-2 border-t border-slate-700/60 flex gap-2 text-xs">
-                        <a href="${item.url}" target="_blank" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-xl transition flex items-center">
-                            Detail & Vstupenky <i data-lucide="external-link" class="w-3 h-3 ml-1"></i>
-                        </a>
-                        <a href="${item.maps_url}" target="_blank" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold px-2.5 py-1.5 rounded-xl transition flex items-center">
-                            <i data-lucide="navigation" class="w-3 h-3 mr-1 text-rose-400"></i> Navigovat
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-
-            lucide.createIcons();
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2000);
         }
 
-        // --- REAL-TIME API FETCHES ---
-        async function fetchWeather() {
-            try {
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=50.088&longitude=14.4207&current_weather=true');
-                const data = await res.json();
-                if (data && data.current_weather) {
-                    const temp = Math.round(data.current_weather.temperature);
-                    document.getElementById('weather-val').innerText = `${temp}°C Praha`;
+        // Kategoriální filtr
+        function filterCategory(cat, btn) {
+            document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const tiles = document.querySelectorAll('.tile');
+            tiles.forEach(tile => {
+                if (cat === 'all' || tile.dataset.category === cat) {
+                    tile.style.display = 'flex';
+                } else {
+                    tile.style.display = 'none';
                 }
-            } catch (e) {
-                document.getElementById('weather-val').innerText = `20°C Praha`;
-            }
-        }
-
-        async function fetchCnbRate() {
-            try {
-                const res = await fetch('https://open.er-api.com/v6/latest/EUR');
-                const data = await res.json();
-                if (data && data.rates && data.rates.CZK) {
-                    currentCnbRate = data.rates.CZK;
-                    document.getElementById('cnb-val').innerText = `ČNB: 1 EUR = ${currentCnbRate.toFixed(2)} Kč`;
-                    document.getElementById('calc-cnb-rate').innerText = `1 EUR = ${currentCnbRate.toFixed(2)} CZK`;
-                }
-            } catch (e) {
-                document.getElementById('cnb-val').innerText = `ČNB: 1 EUR = 25.10 Kč`;
-            }
-            runExchangeCalc();
-        }
-
-        // --- EXCHANGE CALCULATOR LOGIC ---
-        function runExchangeCalc() {
-            const eur = parseFloat(document.getElementById('calc-eur-input').value) || 0;
-            const offeredCZK = parseFloat(document.getElementById('calc-czk-offered').value) || 0;
-            const resBox = document.getElementById('calc-result-box');
-
-            if (eur <= 0 || offeredCZK <= 0) {
-                resBox.className = "p-3 bg-slate-900 rounded-xl text-xs text-slate-500";
-                resBox.innerText = "Zadejte platné částky pro výpočet.";
-                return;
-            }
-
-            const fairCZK = eur * currentCnbRate;
-            const diff = fairCZK - offeredCZK;
-            const lossPercent = ((diff / fairCZK) * 100).toFixed(1);
-
-            if (diff > fairCZK * 0.05) {
-                resBox.className = "p-4 bg-rose-950/80 border border-rose-500 rounded-xl text-rose-200 space-y-1";
-                resBox.innerHTML = `
-                    <div class="font-bold text-rose-400 flex items-center text-sm">
-                        <i data-lucide="alert-octagon" class="w-4 h-4 mr-1.5"></i> NEVÝHODNÝ KURZ / PODVOD!
-                    </div>
-                    <div>Férová hodnota ČNB: <strong>${fairCZK.toFixed(0)} CZK</strong></div>
-                    <div>Nabízeno směnárnou: <strong>${offeredCZK.toFixed(0)} CZK</strong></div>
-                    <div class="text-rose-300 font-bold border-t border-rose-800 pt-1.5 mt-1">
-                        Přicházíte o ${diff.toFixed(0)} CZK (Strženo ${lossPercent} %)!
-                    </div>
-                `;
-            } else {
-                resBox.className = "p-4 bg-emerald-950/80 border border-emerald-500 rounded-xl text-emerald-200 space-y-1";
-                resBox.innerHTML = `
-                    <div class="font-bold text-emerald-400 flex items-center text-sm">
-                        <i data-lucide="check-circle" class="w-4 h-4 mr-1.5"></i> FÉROVÁ NABÍDKA
-                    </div>
-                    <div>Férová hodnota ČNB: <strong>${fairCZK.toFixed(0)} CZK</strong></div>
-                    <div>Nabízeno směnárnou: <strong>${offeredCZK.toFixed(0)} CZK</strong></div>
-                    <div class="text-emerald-300 font-bold border-t border-emerald-800 pt-1.5 mt-1">
-                        Skvělá nabídka! Rozdíl je pouze ${Math.abs(diff).toFixed(0)} CZK.
-                    </div>
-                `;
-            }
-            lucide.createIcons();
-        }
-
-        // --- AI PLANNER LOGIC ---
-        function setAiPref(type, val) {
-            aiPrefs[type] = val;
-            // Highlight buttons
-            document.querySelectorAll(`.ai-${type.charAt(0)}-btn`).forEach(b => {
-                b.className = `ai-${type.charAt(0)}-btn p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-semibold`;
             });
-            const selectedBtn = document.getElementById(`btn-${type.charAt(0)}-${val}`);
-            if (selectedBtn) {
-                selectedBtn.className = `ai-${type.charAt(0)}-btn p-2.5 rounded-xl bg-rose-600 border border-rose-500 text-white font-semibold`;
-            }
         }
 
-        function generateAiItinerary() {
-            const resultBox = document.getElementById('ai-plan-result');
-            resultBox.classList.remove('hidden');
+        // Vyhledávání v reálném čase
+        function filterTiles() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const tiles = document.querySelectorAll('.tile');
 
-            let steps = [];
-
-            if (aiPrefs.interest === 'history') {
-                steps = [
-                    { time: "09:00", title: "Pražský Hrad & Katedrála sv. Víta", desc: "Zahajte den u dominanty Prahy ještě před davy turistů.", link: "https://maps.google.com/?q=Prague+Castle" },
-                    { time: "12:00", title: "Procházka přes Karlův most", desc: "Sestupte Starými zámeckými schody k mostu a Vltavě.", link: "https://maps.google.com/?q=Charles+Bridge" },
-                    { time: "14:00", title: "Staroměstské náměstí & Orloj", desc: "Prohlídka orloje na Staroměstské radnici a oběd v okolí.", link: "https://maps.google.com/?q=Old+Town+Square+Prague" }
-                ];
-            } else if (aiPrefs.interest === 'nightlife') {
-                steps = [
-                    { time: "18:00", title: "Pivo na vyhlídce Letná", desc: "Skvělý západ slunce s výhledem na mosty a skvělým pivem.", link: "https://maps.google.com/?q=Letna+Beer+Garden" },
-                    { time: "21:00", title: "Cocktail Bar Hemingway nebo Black Angel's", desc: "Prvotřídní mixologie v centru staré Prahy.", link: "https://maps.google.com/?q=Hemingway+Bar+Prague" },
-                    { time: "23:30", title: "Klub Roxy / Epic / Cross Club", desc: "Párty až do rána v prověřeném podniku bez předražených turistických přirážek.", link: "https://maps.google.com/?q=Roxy+Prague" }
-                ];
-            } else {
-                steps = [
-                    { time: "10:00", title: "Vyšehrad & Parky na skále", desc: "Klidná procházka bez davů s nejlepším výhledem na město.", link: "https://maps.google.com/?q=Vysehrad" },
-                    { time: "13:00", title: "Náplavka & Procházka podél Vltavy", desc: "Trhy, kavárny na lodích a unikátní atmosféra říčního nábřeží.", link: "https://maps.google.com/?q=Naplavka+Prague" },
-                    { time: "16:00", title: "Vrtbovská Barokní Zahrada", desc: "Skrytá perla Malé Strany.", link: "https://maps.google.com/?q=Vrtba+Garden" }
-                ];
-            }
-
-            resultBox.innerHTML = `
-                <div class="bg-slate-800 border border-rose-500/40 rounded-2xl p-5 space-y-4">
-                    <h3 class="font-bold text-base text-rose-400 flex items-center border-b border-slate-700 pb-2">
-                        <i data-lucide="check-circle-2" class="w-5 h-5 mr-2"></i> Váš Doporučený Program na Míru
-                    </h3>
-                    <div class="space-y-3">
-                        ${steps.map(s => `
-                            <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-700/80 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
-                                <div>
-                                    <span class="text-rose-400 font-bold text-xs">${s.time}</span>
-                                    <h4 class="font-bold text-sm text-white">${s.title}</h4>
-                                    <p class="text-xs text-slate-400 mt-0.5">${s.desc}</p>
-                                </div>
-                                <a href="${s.link}" target="_blank" class="bg-rose-600 hover:bg-rose-500 text-white font-semibold px-3 py-1.5 rounded-lg text-xs whitespace-nowrap self-start sm:self-center flex items-center">
-                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 mr-1"></i> Otevřít Mapu
-                                </a>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-            lucide.createIcons();
+            tiles.forEach(tile => {
+                const text = tile.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    tile.style.display = 'flex';
+                } else {
+                    tile.style.display = 'none';
+                }
+            });
         }
 
-        // --- GLOBAL SEARCH ENGINE ---
-        function handleGlobalSearch() {
-            const query = document.getElementById('global-search').value.toLowerCase().trim();
-            const panel = document.getElementById('search-results-panel');
-            const list = document.getElementById('search-results-list');
-
-            if (query.length < 2) {
-                panel.classList.add('hidden');
-                return;
-            }
-
-            panel.classList.remove('hidden');
-
-            const allItems = [
-                ...transportData.map(i => ({ title: i.title_cs, desc: i.desc_cs, url: i.url, cat: "Doprava" })),
-                ...sightsData.map(i => ({ title: i.title_cs, desc: i.desc_cs, url: i.url, cat: "Památka" })),
-                ...cultureData.map(i => ({ title: i.title_cs, desc: i.desc_cs, url: i.url, cat: "Kultura" })),
-                ...nightlifeData.map(i => ({ title: i.title_cs, desc: i.desc_cs, url: i.url, cat: "Noční Život" })),
-                ...safetyData.map(i => ({ title: i.title_cs, desc: i.desc_cs, url: i.url, cat: "Bezpečnost" }))
-            ];
-
-            const results = allItems.filter(i => i.title.toLowerCase().includes(query) || i.desc.toLowerCase().includes(query));
-
-            if (results.length === 0) {
-                list.innerHTML = `<p class="text-xs text-slate-400 col-span-full">Žádné výsledky pro "${query}".</p>`;
-                return;
-            }
-
-            list.innerHTML = results.map(r => `
-                <div class="bg-slate-900 p-3 rounded-xl border border-slate-700/80 flex justify-between items-center text-xs">
-                    <div>
-                        <span class="text-[10px] bg-slate-800 text-rose-400 px-2 py-0.5 rounded font-bold">${r.cat}</span>
-                        <h4 class="font-bold text-white mt-1">${r.title}</h4>
-                        <p class="text-[11px] text-slate-400 line-clamp-1">${r.desc}</p>
-                    </div>
-                    <a href="${r.url}" target="_blank" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-2.5 py-1.5 rounded-lg shrink-0 ml-2">
-                        Otevřít <i data-lucide="external-link" class="w-3 h-3 inline"></i>
-                    </a>
-                </div>
-            `).join('');
-
-            lucide.createIcons();
-        }
-
-        // --- LANGUAGE TOGGLE ---
+        // Přepínač jazyků
+        let currentLang = 'CZ';
         function toggleLanguage() {
-            currentLang = currentLang === 'cs' ? 'en' : 'cs';
-            document.getElementById('lang-btn-text').innerText = currentLang.toUpperCase();
-            renderAllSections();
+            currentLang = currentLang === 'CZ' ? 'EN' : 'CZ';
+            document.getElementById('lang-label').innerText = currentLang === 'CZ' ? 'CZ / EN' : 'EN / CZ';
+            document.getElementById('searchInput').placeholder = currentLang === 'CZ' 
+                ? 'Hledat akce, místa, doprava, kluby...' 
+                : 'Search events, places, transit, clubs...';
         }
     </script>
 </body>
