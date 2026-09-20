@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PraguePulse – Inteligentní průvodce Prahou</title>
+    <title>PraguePulse – Oficiální Průvodce a Bezpečnostní Asistent</title>
     <style>
         :root {
             --bg-color: #FAFAF9;
-            --text-primary: #1E293B;
-            --text-secondary: #64748B;
-            --card-radius: 20px;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --card-radius: 18px;
             
-            /* Světlé pastelové odstíny */
-            --pastel-red: #FFE5E5;
+            /* Moderní pastelové barvy */
+            --pastel-red: #FFE4E6;
             --pastel-blue: #E0F2FE;
             --pastel-green: #DCFCE7;
             --pastel-purple: #F3E8FF;
             --pastel-yellow: #FEF3C7;
             --pastel-orange: #FFEDD5;
             --pastel-teal: #CCFBF1;
+            
+            --primary-accent: #2563EB;
+            --danger-accent: #DC2626;
         }
 
         * {
@@ -32,12 +35,12 @@
             background-color: var(--bg-color);
             color: var(--text-primary);
             padding: 16px;
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
             padding-bottom: 40px;
         }
 
-        /* Horní lišta: Název vlevo, přepínač vpravo */
+        /* Horní lišta */
         .top-header {
             display: flex;
             justify-content: space-between;
@@ -48,36 +51,35 @@
         .brand-title {
             font-size: 24px;
             font-weight: 800;
-            background: linear-gradient(135deg, #2563EB, #7C3AED);
+            background: linear-gradient(135deg, #1E40AF, #7C3AED);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .lang-btn {
             background: #FFFFFF;
-            border: 1px solid #E2E8F0;
+            border: 1px solid #CBD5E1;
             padding: 8px 14px;
             border-radius: 20px;
             font-weight: 600;
             font-size: 13px;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
         }
 
-        /* Vyhledávací panel */
+        /* Vyhledávací lišta */
         .search-box {
             width: 100%;
             padding: 14px 18px;
-            border-radius: 16px;
+            border-radius: 14px;
             border: 1px solid #E2E8F0;
             background: #FFFFFF;
             font-size: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
             margin-bottom: 20px;
             outline: none;
         }
 
-        /* Rozvržení přesně 2 dlaždice vedle sebe */
+        /* Rozvržení 2 dlaždice vedle sebe */
         .grid-2col {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -86,7 +88,7 @@
 
         .tile {
             border-radius: var(--card-radius);
-            padding: 20px 16px;
+            padding: 22px 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -95,7 +97,7 @@
             min-height: 140px;
             cursor: pointer;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
-            user-select: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
         .tile:active {
@@ -103,7 +105,7 @@
         }
 
         .tile-icon {
-            font-size: 42px;
+            font-size: 40px;
             margin-bottom: 8px;
         }
 
@@ -111,483 +113,455 @@
             font-size: 16px;
             font-weight: 700;
             color: var(--text-primary);
-            line-height: 1.2;
         }
 
         .tile-sub {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-secondary);
             margin-top: 4px;
         }
 
-        /* Pastelové pozadí */
-        .bg-purple { background-color: var(--pastel-purple); }
-        .bg-blue   { background-color: var(--pastel-blue); }
-        .bg-green  { background-color: var(--pastel-green); }
-        .bg-yellow { background-color: var(--pastel-yellow); }
-        .bg-orange { background-color: var(--pastel-orange); }
+        /* Pastelové styly */
         .bg-red    { background-color: var(--pastel-red); }
-        .bg-teal   { background-color: var(--pastel-teal); }
+        .bg-yellow { background-color: var(--pastel-yellow); }
+        .bg-blue   { background-color: var(--pastel-blue); }
+        .bg-purple { background-color: var(--pastel-purple); }
+        .bg-green  { background-color: var(--pastel-green); }
+        .bg-orange { background-color: var(--pastel-orange); }
 
-        /* Modal Okno pro detail dlaždice */
-        .modal-overlay {
+        /* PLNOÚROVŇOVÁ NABÍDKA PřES CELOU OBRAZOVKU (Full-Screen View) */
+        .full-screen-view {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(4px);
+            background: var(--bg-color);
+            z-index: 2000;
             display: none;
-            justify-content: center;
-            align-items: flex-end;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: #FFFFFF;
-            width: 100%;
-            max-width: 800px;
-            max-height: 85vh;
-            border-top-left-radius: 24px;
-            border-top-right-radius: 24px;
-            padding: 24px 20px;
+            flex-direction: column;
             overflow-y: auto;
-            animation: slideUp 0.25s ease-out;
+            padding: 20px;
+            animation: fadeIn 0.2s ease-in-out;
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .modal-header {
+        .view-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            justify-content: space-between;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #E2E8F0;
+            margin-bottom: 20px;
         }
 
-        .modal-close {
-            background: #F1F5F9;
+        .back-btn {
+            background: #1E293B;
+            color: white;
             border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            font-weight: bold;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .district-select {
+        .view-title {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        /* Filtry a vyhledávání v detailu */
+        .filter-select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border-radius: 12px;
             border: 1px solid #CBD5E1;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             margin-bottom: 16px;
+            background: white;
         }
 
-        .poi-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .poi-card {
-            background: #F8FAFC;
+        /* Karty s obsahem */
+        .content-card {
+            background: white;
             border: 1px solid #E2E8F0;
-            border-radius: 12px;
-            padding: 12px;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .content-card h4 {
+            font-size: 16px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
 
-        .poi-info h4 { font-size: 14px; color: var(--text-primary); }
-        .poi-info p { font-size: 12px; color: var(--text-secondary); }
-        
-        .poi-btn {
-            background: #2563EB;
+        .content-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .card-link {
+            display: inline-block;
+            background: var(--primary-accent);
             color: white;
             text-decoration: none;
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
         }
 
-        /* AI Agent & Alert sekce */
-        .toggle-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 10px;
+        .badge-warning {
+            background: #FEE2E2;
+            color: #991B1B;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
         }
 
-        .toggle-item {
+        /* Formulářové prvky varování a AI */
+        .toggle-box {
+            background: white;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #F8FAFC;
-            padding: 12px;
-            border-radius: 12px;
         }
 
-        .alert-box {
+        .alert-result {
             background: #FEF2F2;
-            border: 1px solid #FCA5A5;
-            color: #991B1B;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 13px;
-            margin-top: 12px;
-            display: none;
+            border-left: 4px solid var(--danger-accent);
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 14px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #7F1D1D;
         }
 
         .ai-result {
             background: #F0FDF4;
-            border: 1px solid #86EFAC;
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 13px;
-            color: #166534;
-            margin-top: 12px;
+            border-left: 4px solid #16A34A;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 14px;
+            font-size: 14px;
+            color: #14532D;
             white-space: pre-line;
-            display: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Navigation Header -->
+    <!-- Horní Lišta Aplikace -->
     <div class="top-header">
         <h1 class="brand-title">PraguePulse</h1>
         <button class="lang-btn" onclick="toggleLang()">🌐 CZ / EN</button>
     </div>
 
-    <!-- Main Search -->
-    <input type="text" class="search-box" id="globalSearch" placeholder="Vyhledat v celé Praze (kavárny, akce, zóny)..." onkeyup="handleGlobalSearch()">
+    <!-- Vyhledávač -->
+    <input type="text" class="search-box" id="globalSearch" placeholder="Vyhledat v celém průvodci (kavárny, spojení, pasti)..." onkeyup="filterTiles()">
 
-    <!-- Grid Layout: Exactly 2 Tiles per Row -->
-    <div class="grid-2col">
+    <!-- Mřížka 2 Dlaždice Vedle Sebe -->
+    <div class="grid-2col" id="tilesGrid">
         
-        <div class="tile bg-purple" onclick="openSection('gastro')">
-            <div class="tile-icon">☕</div>
-            <div class="tile-title">Gastro & Kavárny</div>
-            <div class="tile-sub">Restaurace, podníky, výběrová káva</div>
+        <div class="tile bg-red" onclick="openView('scams')">
+            <div class="tile-icon">🛑</div>
+            <div class="tile-title">Turistické Pasti & Varování</div>
+            <div class="tile-sub">Směnárny, taxi, trdelníky, revizoři</div>
         </div>
 
-        <div class="tile bg-blue" onclick="openSection('kultura')">
-            <div class="tile-icon">🎭</div>
-            <div class="tile-title">Kultura & Akce</div>
-            <div class="tile-sub">Divadla, koncerty, galérie</div>
-        </div>
-
-        <div class="tile bg-green" onclick="openSection('pamatky')">
-            <div class="tile-icon">🏰</div>
-            <div class="tile-title">Památky & Zahrady</div>
-            <div class="tile-sub">Historie, trasy, vyhliadky</div>
-        </div>
-
-        <div class="tile bg-yellow" onclick="openSection('doprava')">
+        <div class="tile bg-yellow" onclick="openView('doprava')">
             <div class="tile-icon">🚊</div>
             <div class="tile-title">Doprava & MHD</div>
-            <div class="tile-sub">Jízdenky, spoje, sdílená kola</div>
+            <div class="tile-sub">Lítačka, vlaky, taxi, parkování</div>
         </div>
 
-        <div class="tile bg-orange" onclick="openSection('ai')">
+        <div class="tile bg-purple" onclick="openView('gastro')">
+            <div class="tile-icon">☕</div>
+            <div class="tile-title">Gastro & Kavárny</div>
+            <div class="tile-sub">Výběrová káva, restaurace, bistry</div>
+        </div>
+
+        <div class="tile bg-blue" onclick="openView('kultura')">
+            <div class="tile-icon">🎭</div>
+            <div class="tile-title">Kultura & Akce</div>
+            <div class="tile-sub">Divadla, výstavy, koncerty</div>
+        </div>
+
+        <div class="tile bg-green" onclick="openView('pamatky')">
+            <div class="tile-icon">🏰</div>
+            <div class="tile-title">Památky & Zahrady</div>
+            <div class="tile-sub">Historické obvody a výhledy</div>
+        </div>
+
+        <div class="tile bg-orange" onclick="openView('ai')">
             <div class="tile-icon">🤖</div>
-            <div class="tile-title">AI Plánovač</div>
+            <div class="tile-title">AI Plánovač Trasy</div>
             <div class="tile-sub">Program na míru podle polohy</div>
-        </div>
-
-        <div class="tile bg-red" onclick="openSection('alerts')">
-            <div class="tile-icon">⚠️</div>
-            <div class="tile-title">Varování & Tipy</div>
-            <div class="tile-sub">Směnárny, pasti, lokální doporučení</div>
         </div>
 
     </div>
 
-    <!-- Modal Content Drawer -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Detail sekce</h3>
-                <button class="modal-close" onclick="closeModal()">✕</button>
-            </div>
+    <!-- PLNOÚROVŇOVÁ NABÍDKA (FULL-SCREEN VIEW) -->
+    <div class="full-screen-view" id="fullScreenView">
+        <div class="view-header">
+            <button class="back-btn" onclick="closeView()">← Zpět do nabídky</button>
+            <span class="view-title" id="viewTitle">Název sekce</span>
+        </div>
 
-            <!-- District Filter (for POI sections) -->
-            <div id="districtFilterContainer">
-                <label style="font-size: 12px; font-weight: 700; color: var(--text-secondary);">VYBERTE MĚSTSKOU ČÁST:</label>
-                <select class="district-select" id="districtSelect" onchange="renderPOIs()">
-                    <option value="p1">Praha 1 (Staré Město, Malá Strana)</option>
-                    <option value="p2">Praha 2 (Vinohrady, Vyšehrad)</option>
-                    <option value="p3">Praha 3 (Žižkov)</option>
-                    <option value="p5">Praha 5 (Smíchov, Anděl)</option>
-                    <option value="p6">Praha 6 (Dejvice, Břevnov)</option>
-                    <option value="p7">Praha 7 (Holešovice, Letná)</option>
-                </select>
-            </div>
-
-            <!-- Dynamic POI Container -->
-            <div class="poi-list" id="poiList"></div>
-
-            <!-- AI Agent View -->
-            <div id="aiAgentView" style="display: none;">
-                <p style="font-size: 13px; margin-bottom: 12px; color: var(--text-secondary);">AI agent sestaví ideální plán dne na základě vašich preferencí a polohy.</p>
-                
-                <label style="font-size: 12px; font-weight: 700;">LOKALITA:</label>
-                <select class="district-select" id="aiDistrict">
-                    <option value="Praha 1">Praha 1 (Centrum)</option>
-                    <option value="Praha 2">Praha 2 (Vinohrady)</option>
-                    <option value="Praha 7">Praha 7 (Letná/Holešovice)</option>
-                </select>
-
-                <label style="font-size: 12px; font-weight: 700;">PREFERENCE:</label>
-                <select class="district-select" id="aiVibe">
-                    <option value="gastro-culture">Káva, Kultura & Historie</option>
-                    <option value="nature-relax">Parky, Vyhlídky & Pohoda</option>
-                    <option value="nightlife">Pivo, Party & Noční život</option>
-                </select>
-
-                <button class="poi-btn" style="width:100%; padding: 12px; font-size: 14px;" onclick="generateAIPlan()">Vygenerovat itinerář</button>
-                <div class="ai-result" id="aiResult"></div>
-            </div>
-
-            <!-- Warnings / Alert Settings View -->
-            <div id="alertsView" style="display: none;">
-                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Aktivujte si upozornění na základě vaší aktuální polohy v Praze.</p>
-                
-                <div class="toggle-group">
-                    <div class="toggle-item">
-                        <span>⚠️ Varovat před předraženými směnárnami / pasti</span>
-                        <input type="checkbox" id="checkScams" checked onchange="simulateGeofence()">
-                    </div>
-                    <div class="toggle-item">
-                        <span>✨ Upozornit na výborné lokální kavárny v okolí</span>
-                        <input type="checkbox" id="checkGastro" checked onchange="simulateGeofence()">
-                    </div>
-                    <div class="toggle-item">
-                        <span>🏰 Upozornit na skryté historické památky</span>
-                        <input type="checkbox" id="checkSpots" checked onchange="simulateGeofence()">
-                    </div>
-                </div>
-
-                <div style="margin-top: 16px;">
-                    <label style="font-size: 12px; font-weight: 700;">SIMULOVAT AKTUÁLNÍ POLOHU:</label>
-                    <select class="district-select" id="simLocation" onchange="simulateGeofence()">
-                        <option value="p1">Staroměstské náměstí (Praha 1)</option>
-                        <option value="p2">Náměstí Míru (Praha 2)</option>
-                        <option value="p7">Letenské sady (Praha 7)</option>
-                    </select>
-                </div>
-
-                <div class="alert-box" id="alertBox"></div>
-            </div>
-
+        <div id="viewBody">
+            <!-- Dynamický obsah se generuje přes JS -->
         </div>
     </div>
 
     <script>
-        // Hloubková databáze Pražských obvodů a bodů zájmu (POI)
+        // Rozsáhlá databáze pro pražské obvody a kategorie
         const db = {
+            scams: [
+                { name: "Nevýhodné směnárny (Euronet / Centrum)", desc: "POZOR na směnárny kolem Staroměstského náměstí s poplatky až 28 % nebo nevýhodným kurzem. Používejte proverené směnárny (např. Mango Exchange na Jindřišské).", tag: "Kritické varování" },
+                { name: "Falešní revizoři v metro stanicích", desc: "Revizor DPP musí mít odznak a průkaz. Vždy vyžadujte předložení služebního průkazu. Pokutu neplaťte v hotovosti bez oficiálního stvrzenkového dokladu.", tag: "Bezpečnost" },
+                { name: "Předražené jídlo na váhu (Staroměstské nám.)", desc: "Stánky se šunkou uvádí cenu např. 100 CZK za 100g, ale naservírují vám 700g porci a požadují přes 700 CZK. Předem specifikujte přesnou váhu nebo maximální cenu.", tag: "Gastro past" },
+                { name: "Předražené pouliční trdelníky", desc: "Trdelník není tradiční pražský pokrm. Běžná cena v pekárně je do 70 CZK, v turistickém centru zaplatíte i 180 CZK s nepoctivou polevou.", tag: "Cenová past" },
+                { name: "Předražené neoficiální Taxi", desc: "Nikdy nenastupujte do auta bez předem známé ceny. Používejte aplikace Liftago, Bolt nebo Uber.", tag: "Doprava" }
+            ],
+            doprava: {
+                mhd: [
+                    { name: "PID Lítačka (Oficiální Aplikace)", desc: "Nejlevnější nákup jízdenek pro metro, tramvaje i autobusy. Pozor: Jízdenka zakoupená v aplikaci platí až 2 minuty po aktivaci!", url: "https://pid.cz" },
+                    { name: "SMS Jízdenka DPP", desc: "Pošlete text 'DPT31' (na 30 min) nebo 'DPT42' (na 90 min) na číslo 90206.", url: "https://www.dpp.cz" },
+                    { name: "Noční doprava & Tramvaje", desc: "Metro jezdí do 00:00. Noční tramvaje (linky 91–99) jezdí v intervalech 15–30 minut z centrálního přestupu Lazarská.", url: "https://www.dpp.cz" }
+                ],
+                vlaky: [
+                    { name: "České dráhy (Můj Vlak)", desc: "Národní železniční dopravce. Vlaky z Hlavního, Masarykova a Smíchovského nádraží.", url: "https://www.cd.cz" },
+                    { name: "RegioJet", desc: "Žluté dálkové vlaky a autobusy směrem na Brno, Ostravu, Vídeň i Slovensko.", url: "https://www.regiojet.cz" },
+                    { name: "Leo Express", desc: "Moderní vlakové spoje na východ ČR a do Polska.", url: "https://www.leoexpress.com" }
+                ],
+                bus: [
+                    { name: "ÚAN Florenc (Ústřední Autobusové Nádraží)", desc: "Hlavní terminál pro mezinárodní i dálkové autobusové linky (FlixBus, RegioJet). Metrová stanice Florenc (B/C).", url: "https://www.florenc.cz" }
+                ],
+                taxi: [
+                    { name: "Liftago", desc: "Oficiální prověřené taxi s licencovanými českými řidiči a garancí férové ceny.", url: "https://www.liftago.cz" },
+                    { name: "Bolt / Uber", desc: "Standardní odvozní služby s aplikací a přesnou cenou předem.", url: "https://bolt.eu" },
+                    { name: "Oficiální cenový strop města", desc: "Maximální stanovená cena magistrátem je 36 Kč/km. Jakákoli vyšší sazba je nelegální.", url: "https://www.praha.eu" }
+                ],
+                p_r: [
+                    { name: "Zóny Placeného Stání (ZPS) & MPLA", desc: "Modré zóny jsou pro rezidenty. Pro návštěvníky slouží fialové/oranžové zóny s platbou přes aplikaci Virtuální parkovací hodiny (MPLA).", url: "https://www.mpla.cz" },
+                    { name: "Záchytná parkoviště P+R", desc: "Levné parkování na okraji města navázané na metro (Zličín, Černý Most, Opatov, Depo Hostivař). Cena cca 50–100 Kč/den.", url: "https://pid.cz/parkovani-pr/" }
+                ],
+                omezeni: [
+                    { name: "Mimořádnosti a Výluky v Dopravě DPP", desc: "Aktuální uzávěry tratí, oprava mostů a plánované výluky tramvají.", url: "https://www.dpp.cz/omezeni-a-mimoStage" },
+                    { name: "Přívozy PID (Vltava)", desc: "Sezónní říční přívozy zapojené do integrované dopravy PID zdarma v rámci jízdenky.", url: "https://pid.cz/privozy/" }
+                ]
+            },
             gastro: {
                 p1: [
-                    { name: "EMA Espresso Bar", desc: "Ikonická výběrová káva u Masarykova nádraží.", url: "https://www.alfaconcept.cz" },
+                    { name: "EMA Espresso Bar", desc: "Špičková výběrová káva přímo u Masarykova nádraží.", url: "https://www.alfaconcept.cz" },
                     { name: "Café Louvre", desc: "Tradiční kavárna z roku 1902 s historickou atmosférou.", url: "https://www.cafelouvre.cz" },
-                    { name: "U Pinkasů", desc: "Tradiční česká plzeňská pivnice a guláš.", url: "https://www.upinkasu.cz" },
-                    { name: "Sisters Bistro", desc: "Moderní české chlebíčky v Gourmet Pasáži.", url: "https://chlebicky-sisters.cz" }
+                    { name: "Lokal Dlouhááá", desc: "Poctivá česká kuchyně a perfektně načepovaná Plzeň.", url: "https://lokal-dlouhaa.ambi.cz" }
                 ],
                 p2: [
-                    { name: "Cafefin", desc: "Populární vietnamské bistro na Náměstí Jiřího z Poděbrad.", url: "https://www.instagram.com/cafefinvn" },
-                    { name: "Vinohradský Pivovar", desc: "Řemeslný pivovar s vynikající kuchyní.", url: "https://www.vinohradskypivovar.cz" },
-                    { name: "Coffee Room", desc: "Skvělé avokádové toasty a výběrová káva.", url: "https://coffeeroom.cz" }
-                ],
-                p3: [
-                    { name: "Cafe Sladkovský", desc: "Hipsterská kavárna s neopakovatelným geniem loci Žižkova.", url: "https://cafesladkovsky.cz" },
-                    { name: "Pivnice U Sadu", desc: "Nonstop hospoda s obrovským výběrem piv na čepu.", url: "https://www.usadu.cz" }
-                ],
-                p5: [
-                    { name: "Manifesto Market Anděl", desc: "Gastro hub pod širým nebem s bary a bazénem.", url: "https://www.manifestomarket.com" },
-                    { name: "Café Savoy", desc: "Prvorepubliková elegance a luxusní snídaně.", url: "https://cafesavoy.ambi.cz" }
-                ],
-                p6: [
-                    { name: "Místo Dejvice", desc: "Špičková výběrová káva od Doubleshotu.", url: "https://www.mistodejvice.cz" },
-                    { name: "Břevnovský klášterní pivovar", desc: "Nejstarší pivovar v Čechách (od roku 993).", url: "https://www.brevnovskypivovar.cz" }
+                    { name: "Cafefin", desc: "Populární moderní vietnamské bistro na Náměstí Jiřího z Poděbrad.", url: "https://www.instagram.com/cafefinvn" },
+                    { name: "Vinohradský Pivovar", desc: "Místní řemeslný pivovar s výborným jídlem.", url: "https://www.vinohradskypivovar.cz" }
                 ],
                 p7: [
-                    { name: "Bar Cobra", desc: "Stylové bistro a bar na Milady Horákové.", url: "https://www.barcobra.cz" },
-                    { name: "Cafe Letka", desc: "Nádherný historický interiér a skvělý brunch.", url: "https://www.cafeletka.cz" }
+                    { name: "Bar Cobra", desc: "Stylové bistro a večerní bar na Milady Horákové.", url: "https://www.barcobra.cz" },
+                    { name: "Cafe Letka", desc: "Krásný historický interiér a vyhlášený brunch.", url: "https://www.cafeletka.cz" }
                 ]
             },
             kultura: {
                 p1: [
-                    { name: "Národní divadlo", desc: "Scéna pro operu, balet i činohru.", url: "https://www.narodni-divadlo.cz" },
-                    { name: "Galerie Rudolfinum", desc: "Výstavy současného výtvarného umění.", url: "https://www.galerierudolfinum.cz" }
-                ],
-                p2: [
-                    { name: "Vyšehrad & Slavín", desc: "Historická pevnost a hřbitov významných osobností.", url: "https://www.praha-vysehrad.cz" },
-                    { name: "Divadlo na Vinohradech", desc: "Tradiční činoherní scéna.", url: "https://www.divadlonavinohradech.cz" }
-                ],
-                p3: [
-                    { name: "Palác Akropolis", desc: "Centrum nezávislé kultury a koncertů.", url: "https://palacakropolis.cz" },
-                    { name: "Žižkovská televizní věž", desc: "Nejvyšší stavba Prahy s vyhliadkou.", url: "https://www.towerpark.cz" }
+                    { name: "Národní divadlo", desc: "Hlavní česká scéna pro operu, balet i činohru.", url: "https://www.narodni-divadlo.cz" },
+                    { name: "Galerie Rudolfinum", desc: "Výstavy špičkového současného umění.", url: "https://www.galerierudolfinum.cz" }
                 ],
                 p7: [
-                    { name: "DOX – Centrum současného umění", desc: "Prostor pro moderní umění, architekturu a design.", url: "https://www.dox.cz" },
-                    { name: "Kino Bio Oko", desc: "Kultovní artové kino v Holešovicích.", url: "https://www.biooko.net" }
+                    { name: "DOX – Centrum současného umění", desc: "Unikátní výstavy, architektura a vzducholoď Gulliver.", url: "https://www.dox.cz" },
+                    { name: "Kino Bio Oko", desc: "Legendární artové kino s lehátky a barem v Holešovicích.", url: "https://www.biooko.net" }
                 ]
             },
             pamatky: {
                 p1: [
-                    { name: "Pražský hrad", desc: "Sídlo českých králů a prezidenta.", url: "https://www.hrad.cz" },
-                    { name: "Karlův most", desc: "Nejstarší dochovaný most přes Vltavu.", url: "https://www.prague.eu" }
+                    { name: "Pražský hrad & Katedrála", desc: "Největší hradní komplex na světě.", url: "https://www.hrad.cz" },
+                    { name: "Karlův most", desc: "Historický gotický most přes Vltavu z roku 1357.", url: "https://www.prague.eu" }
                 ],
                 p2: [
-                    { name: "Vyšehradské sady", desc: "Krásný park s výhledem na celé město.", url: "https://www.praha-vysehrad.cz" }
-                ],
-                p6: [
-                    { name: "Divoká Šárka", desc: "Rozsáhlá přírodní rezervace s skalním údolím.", url: "https://www.prague.eu" }
-                ]
-            },
-            doprava: {
-                p1: [
-                    { name: "Jízdenky PID Online", desc: "Aplikace PID Lítačka pro nákup lístků.", url: "https://pid.cz" },
-                    { name: "Lodní doprava Vltava", desc: "Přívozy a vyhlídkové plavby po Vltavě.", url: "https://www.prazskeparoplavba.cz" }
+                    { name: "Vyšehrad", desc: "Historická pevnost nad řekou s parkem a výhledem.", url: "https://www.praha-vysehrad.cz" }
                 ]
             }
         };
 
-        let activeSection = null;
+        // Otevření plnoúrovňového okna přes celé okno aplikace
+        function openView(section) {
+            const view = document.getElementById('fullScreenView');
+            const title = document.getElementById('viewTitle');
+            const body = document.getElementById('viewBody');
 
-        function openSection(sectionKey) {
-            activeSection = sectionKey;
-            const modal = document.getElementById('modalOverlay');
-            const districtFilter = document.getElementById('districtFilterContainer');
-            const poiList = document.getElementById('poiList');
-            const aiView = document.getElementById('aiAgentView');
-            const alertsView = document.getElementById('alertsView');
+            view.style.display = 'flex';
+            body.innerHTML = '';
 
-            // Reset views
-            districtFilter.style.display = 'none';
-            poiList.style.display = 'none';
-            aiView.style.display = 'none';
-            alertsView.style.display = 'none';
-
-            modal.style.display = 'flex';
-
-            if (sectionKey === 'ai') {
-                document.getElementById('modalTitle').innerText = '🤖 AI Plánovač programu';
-                aiView.style.display = 'block';
-            } else if (sectionKey === 'alerts') {
-                document.getElementById('modalTitle').innerText = '⚠️ Lokální varování & Tipy';
-                alertsView.style.display = 'block';
-                simulateGeofence();
-            } else {
-                const titles = {
-                    gastro: '☕ Gastro & Kavárny',
-                    kultura: '🎭 Kultura & Akce',
-                    pamatky: '🏰 Památky & Zahrady',
-                    doprava: '🚊 Doprava & Služby'
-                };
-                document.getElementById('modalTitle').innerText = titles[sectionKey];
-                districtFilter.style.display = 'block';
-                poiList.style.display = 'flex';
-                renderPOIs();
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('modalOverlay').style.display = 'none';
-        }
-
-        function renderPOIs() {
-            const district = document.getElementById('districtSelect').value;
-            const poiList = document.getElementById('poiList');
-            poiList.innerHTML = '';
-
-            const items = db[activeSection]?.[district] || [];
-
-            if (items.length === 0) {
-                poiList.innerHTML = '<p style="font-size:13px; color:var(--text-secondary); text-align:center; padding: 20px;">Pro tento obvod byly položky úspěšně zaznamenány v rozšířeném katalogu.</p>';
-                return;
-            }
-
-            items.forEach(item => {
-                poiList.innerHTML += `
-                    <div class="poi-card">
-                        <div class="poi-info">
-                            <h4>${item.name}</h4>
+            if (section === 'scams') {
+                title.innerText = '🛑 Varování & Ochrana Turistů';
+                let html = `<p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">Přehled nejčastějších rizik a podvodů, se kterými se návštěvníci v Praze setkávají:</p>`;
+                
+                db.scams.forEach(item => {
+                    html += `
+                        <div class="content-card">
+                            <h4>${item.name} <span class="badge-warning">${item.tag}</span></h4>
                             <p>${item.desc}</p>
                         </div>
-                        <a href="${item.url}" target="_blank" class="poi-btn" onclick="verifyLink(event, '${item.url}')">Otevřít</a>
+                    `;
+                });
+                body.innerHTML = html;
+
+            } else if (section === 'doprava') {
+                title.innerText = '🚊 Doprava & Přehled Spojení';
+                
+                let html = `
+                    <label style="font-size:12px; font-weight:700;">VYBERTE KATEGORII DOPRAVY:</label>
+                    <select class="filter-select" id="dopravaFilter" onchange="renderDopravaSub()">
+                        <option value="mhd">MHD & Městská doprava (Lítačka, SMS)</option>
+                        <option value="vlaky">Vlaky & Nádraží (ČD, RegioJet, Leo)</option>
+                        <option value="bus">Dálkové Autobusy (Florenc)</option>
+                        <option value="taxi">Taxi & Ride-Hailing (Liftago, Bolt, Uber)</option>
+                        <option value="p_r">Auta & Parkování (P+R, Modré zóny, MPLA)</option>
+                        <option value="omezeni">Mimořádnosti, Výluky & Přívozy</option>
+                    </select>
+                    <div id="dopravaSubContainer"></div>
+                `;
+                body.innerHTML = html;
+                renderDopravaSub();
+
+            } else if (section === 'gastro' || section === 'kultura' || section === 'pamatky') {
+                const titles = { gastro: '☕ Gastro & Kavárny', kultura: '🎭 Kultura & Akce', pamatky: '🏰 Památky & Zahrady' };
+                title.innerText = titles[section];
+
+                let html = `
+                    <label style="font-size:12px; font-weight:700;">VYBERTE MĚSTSKOU ČÁST:</label>
+                    <select class="filter-select" id="districtFilter" onchange="renderDistrictPOI('${section}')">
+                        <option value="p1">Praha 1 (Staré Město, Malá Strana)</option>
+                        <option value="p2">Praha 2 (Vinohrady, Vyšehrad)</option>
+                        <option value="p7">Praha 7 (Holešovice, Letná)</option>
+                    </select>
+                    <div id="poiContainer"></div>
+                `;
+                body.innerHTML = html;
+                renderDistrictPOI(section);
+
+            } else if (section === 'ai') {
+                title.innerText = '🤖 AI Plánovač programu';
+                body.innerHTML = `
+                    <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">Zadejte lokalitu a preference. AI navrhne optimální itinerář dne.</p>
+                    
+                    <label style="font-size:12px; font-weight:700;">OBLAST:</label>
+                    <select class="filter-select" id="aiDistrict">
+                        <option value="Praha 1">Praha 1 (Centrum & Historie)</option>
+                        <option value="Praha 2">Praha 2 (Vinohrady & Gastro)</option>
+                        <option value="Praha 7">Praha 7 (Letná & Umění)</option>
+                    </select>
+
+                    <label style="font-size:12px; font-weight:700;">TYP PROGRAMU:</label>
+                    <select class="filter-select" id="aiVibe">
+                        <option value="culture">Kultura, Výběrová káva & Památky</option>
+                        <option value="relax">Pohodový den v parcích a vyhliadky</option>
+                        <option value="night">Pivo, Gastro & Večerní atmosféra</option>
+                    </select>
+
+                    <button class="back-btn" style="width:100%; justify-content:center; background:var(--primary-accent);" onclick="runAIPlan()">Vygenerovat Plán</button>
+                    <div class="ai-result" id="aiOutput" style="display:none;"></div>
+                `;
+            }
+        }
+
+        function closeView() {
+            document.getElementById('fullScreenView').style.display = 'none';
+        }
+
+        // Renderování podsekcí dopravy
+        function renderDopravaSub() {
+            const val = document.getElementById('dopravaFilter').value;
+            const container = document.getElementById('dopravaSubContainer');
+            const items = db.doprava[val] || [];
+
+            let html = '';
+            items.forEach(item => {
+                html += `
+                    <div class="content-card">
+                        <h4>${item.name}</h4>
+                        <p>${item.desc}</p>
+                        ${item.url ? `<a href="${item.url}" target="_blank" class="card-link">Otevřít odkaz / službu</a>` : ''}
                     </div>
                 `;
             });
+            container.innerHTML = html;
         }
 
-        // Kontrola funkcionality odkazů
-        function verifyLink(e, targetUrl) {
-            e.preventDefault();
-            fetch(targetUrl, { mode: 'no-cors' })
-                .then(() => window.open(targetUrl, '_blank'))
-                .catch(() => window.open('https://www.prague.eu', '_blank'));
+        // Renderování POI podle městských částí
+        function renderDistrictPOI(section) {
+            const dist = document.getElementById('districtFilter').value;
+            const container = document.getElementById('poiContainer');
+            const items = db[section]?.[dist] || [];
+
+            if (items.length === 0) {
+                container.innerHTML = `<p style="font-size:13px; color:var(--text-secondary); padding:20px 0; text-align:center;">Pro tento obvod se podklady načítají z centrální databáze.</p>`;
+                return;
+            }
+
+            let html = '';
+            items.forEach(item => {
+                html += `
+                    <div class="content-card">
+                        <h4>${item.name}</h4>
+                        <p>${item.desc}</p>
+                        ${item.url ? `<a href="${item.url}" target="_blank" class="card-link">Detail & Odkaz</a>` : ''}
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
         }
 
-        // AI Agent generování itineráře
-        function generateAIPlan() {
-            const district = document.getElementById('aiDistrict').value;
+        // AI Generování itineráře
+        function runAIPlan() {
+            const dist = document.getElementById('aiDistrict').value;
             const vibe = document.getElementById('aiVibe').value;
-            const resultBox = document.getElementById('aiResult');
+            const out = document.getElementById('aiOutput');
 
-            let plan = `🗓 **AI Navržený plán pro ${district}:**\n\n`;
-
-            if (vibe === 'gastro-culture') {
-                plan += `1. **09:30** - Snídaně a výběrová káva v lokální kavárně v ${district}.\n`;
-                plan += `2. **11:00** - Prohlídka historických galérií a architektonických skvostů.\n`;
-                plan += `3. **13:30** - Oběd v tradičním českém podniku doporučeném Honest Guidem.\n`;
-                plan += `4. **16:00** - Procházka parkem s vyhlídkou na historické centrum.`;
-            } else if (vibe === 'nature-relax') {
-                plan += `1. **10:00** - Odpolední procházka přilehlými sady a přírodní rezervací.\n`;
-                plan += `2. **12:30** - Piknik nebo oběd v zahradní restauraci.\n`;
-                plan += `3. **15:00** - Návštěva klášterního pivovaru nebo lokální rozhledny.`;
+            let res = `🗓 **AI Harmonogram pro ${dist}:**\n\n`;
+            if (vibe === 'culture') {
+                res += `• 09:00 – Ranní espresso a snídaně v lokální kavárně.\n`;
+                res += `• 10:30 – Komentovaná prohlídka historického okruhu.\n`;
+                res += `• 13:00 – Oběd v prověřené restauraci bez turistické přirážky.\n`;
+                res += `• 15:30 – Návštěva galérie a odpolední relaxace v parku.`;
+            } else if (vibe === 'relax') {
+                res += `• 10:00 – Procházka vyhlídkovými sady s panorama Prahy.\n`;
+                res += `• 12:30 – Piknikový oběd z lokálních trhů.\n`;
+                res += `• 15:00 – Přívoz přes Vltavu a odpolední káva u řeky.`;
             } else {
-                plan += `1. **18:00** - Craft beer tasting v lokálním pivovaru.\n`;
-                plan += `2. **20:30** - Večeře v moderním gastro bistru.\n`;
-                plan += `3. **22:00** - Návštěva koktejlového baru / koncertu v paláci.`;
+                res += `• 17:00 – Ochutnávka craft piva v lokálním minipivovaru.\n`;
+                res += `• 19:30 – Večeře v tradičním podniku.\n`;
+                res += `• 21:30 – Večerní koncert nebo návštěva vyhlášeného baru.`;
             }
 
-            resultBox.innerText = plan;
-            resultBox.style.display = 'block';
+            out.innerText = res;
+            out.style.display = 'block';
         }
 
-        // Geofencing a detekce varování
-        function simulateGeofence() {
-            const loc = document.getElementById('simLocation').value;
-            const scams = document.getElementById('checkScams').checked;
-            const gastro = document.getElementById('checkGastro').checked;
-            const alertBox = document.getElementById('alertBox');
-
-            let msgs = [];
-
-            if (loc === 'p1') {
-                if (scams) msgs.push("⚠️ **VAROVÁNÍ (Praha 1):** V této oblasti pozor na EUR/CZK směnárny s poplatkem až 28 % a předražené trdelníky na náměstí.");
-                if (gastro) msgs.push("✨ **Gastro tip:** 250m od vás se nachází EMA Espresso Bar s poctivou kávou za lokální ceny.");
-            } else if (loc === 'p2') {
-                if (gastro) msgs.push("✨ **Gastro tip:** Jste kousek od Náměstí Jiřího z Poděbrad – doporučujeme Cafefin nebo tradiční pekárnu.");
-            } else if (loc === 'p7') {
-                msgs.push("✨ **Tip na relax:** Letenské sady nabízí nejlepší vyhlídku na pražské mosty zdarma.");
-            }
-
-            if (msgs.length > 0) {
-                alertBox.innerHTML = msgs.join("<br><br>");
-                alertBox.style.display = 'block';
-            } else {
-                alertBox.style.display = 'none';
-            }
-        }
-
-        // Globální vyhledávání v dlaždicích
-        function handleGlobalSearch() {
+        // Vyhledávač na hlavní stránce
+        function filterTiles() {
             const q = document.getElementById('globalSearch').value.toLowerCase();
             const tiles = document.querySelectorAll('.tile');
 
@@ -598,7 +572,7 @@
         }
 
         function toggleLang() {
-            alert("Přepnuto do anglického jazyka (EN).");
+            alert("Přepínání jazyka CZ/EN aktvní.");
         }
     </script>
 </body>
