@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PraguePulse – Premium Tourist Guide & Safety Assistant</title>
+    <title>PragueGuard – Transit & Anti-Scam Guide</title>
     <style>
         :root {
             --bg-color: #FAF9F5;
@@ -11,7 +11,7 @@
             --text-secondary: #475569;
             --card-radius: 20px;
             
-            /* Moderní pastelové odstíny */
+            /* Pastelové tóny */
             --pastel-red: #FFE4E6;
             --pastel-blue: #E0F2FE;
             --pastel-green: #DCFCE7;
@@ -24,6 +24,7 @@
             --pastel-emerald: #D1FAE5;
             
             --primary-accent: #2563EB;
+            --brand-gold: #D97706;
             --danger-accent: #DC2626;
         }
 
@@ -51,21 +52,48 @@
             margin-bottom: 16px;
         }
 
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .brand-title {
-            font-size: 26px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #1E40AF, #7C3AED);
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #0F172A, #2563EB);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .premium-badge-btn {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(217, 119, 6, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .lang-select {
             background: #FFFFFF;
             border: 1px solid #CBD5E1;
-            padding: 8px 12px;
+            padding: 8px 10px;
             border-radius: 20px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             outline: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.03);
@@ -84,7 +112,7 @@
             outline: none;
         }
 
-        /* Grid: Exactly 2 Tiles Side by Side */
+        /* Grid Layout: Exactly 2 Columns */
         .grid-2col {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -184,7 +212,6 @@
             font-weight: 800;
         }
 
-        /* Filter elements */
         .filter-select {
             width: 100%;
             padding: 12px;
@@ -197,7 +224,6 @@
             outline: none;
         }
 
-        /* Cards inside Full View */
         .content-card {
             background: white;
             border: 1px solid #E2E8F0;
@@ -272,27 +298,186 @@
             color: #14532D;
             white-space: pre-line;
         }
+
+        /* PAYWALL OVERLAY STYLES */
+        .paywall-view {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #0F172A;
+            color: white;
+            z-index: 4000;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 24px 20px;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        .paywall-close {
+            align-self: flex-end;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .paywall-hero {
+            text-align: center;
+            margin: 16px 0 24px 0;
+        }
+
+        .paywall-title {
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #38BDF8, #F59E0B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .paywall-subtitle {
+            font-size: 14px;
+            color: #94A3B8;
+            line-height: 1.4;
+        }
+
+        .paywall-features {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #E2E8F0;
+        }
+
+        .feature-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .feature-icon {
+            font-size: 18px;
+        }
+
+        .plans-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .plan-card {
+            background: rgba(255,255,255,0.07);
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 18px;
+            padding: 18px;
+            position: relative;
+            cursor: pointer;
+            transition: border-color 0.2s, transform 0.15s;
+        }
+
+        .plan-card.featured {
+            border-color: #F59E0B;
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #F59E0B;
+            color: #0F172A;
+            font-size: 11px;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .plan-title {
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .plan-price {
+            font-size: 22px;
+            font-weight: 900;
+            color: #F59E0B;
+        }
+
+        .plan-desc {
+            font-size: 12px;
+            color: #94A3B8;
+        }
+
+        .buy-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+            margin-bottom: 12px;
+        }
+
+        .paywall-footer-note {
+            text-align: center;
+            font-size: 11px;
+            color: #64748B;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
 
     <!-- Header -->
     <div class="top-header">
-        <h1 class="brand-title">PraguePulse</h1>
-        <select class="lang-select" id="langSelect" onchange="changeLanguage()">
-            <option value="cs">🇨🇿 CZ</option>
-            <option value="en">🇬🇧 EN</option>
-            <option value="de">🇩🇪 DE</option>
-            <option value="fr">🇫🇷 FR</option>
-            <option value="es">🇪🇸 ES</option>
-            <option value="it">🇮🇹 IT</option>
-        </select>
+        <div class="brand-container">
+            <span style="font-size:26px;">🛡️</span>
+            <h1 class="brand-title">PragueGuard</h1>
+        </div>
+        <div class="header-actions">
+            <button class="premium-badge-btn" onclick="openPaywall()">
+                <span>⭐</span> <span data-i18n="btn_pass">Pass</span>
+            </button>
+            <select class="lang-select" id="langSelect" onchange="changeLanguage()">
+                <option value="cs">🇨🇿 CZ</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="de">🇩🇪 DE</option>
+                <option value="fr">🇫🇷 FR</option>
+                <option value="es">🇪🇸 ES</option>
+                <option value="it">🇮🇹 IT</option>
+            </select>
+        </div>
     </div>
 
-    <!-- Search input -->
+    <!-- Vyhledávání -->
     <input type="text" class="search-box" id="globalSearch" placeholder="Vyhledat v celém průvodci..." onkeyup="filterTiles()">
 
-    <!-- 12 Key Tiles in 2-Column Layout -->
+    <!-- 12 Hlavních Dlaždic (Mřížka 2 sloupce) -->
     <div class="grid-2col" id="tilesGrid">
         
         <div class="tile bg-red" onclick="openView('scams')">
@@ -369,26 +554,83 @@
 
     </div>
 
-    <!-- FULL-SCREEN VIEW OVERLAY -->
+    <!-- DETAILNÍ VYJÍŽDĚCÍ NABÍDKA PřES CELOU OBRAZOVKU -->
     <div class="full-screen-view" id="fullScreenView">
         <div class="view-header">
             <button class="back-btn" id="backBtn" onclick="closeView()">← Zpět</button>
             <span class="view-title" id="viewTitle">Detail</span>
         </div>
-
         <div id="viewBody"></div>
+    </div>
+
+    <!-- PAYWALL OVERLAY (Platební obrazovka Model A + Model C) -->
+    <div class="paywall-view" id="paywallView">
+        <button class="paywall-close" onclick="closePaywall()">✕</button>
+        
+        <div class="paywall-hero">
+            <h2 class="paywall-title" data-i18n="pw_title">PragueGuard Pass</h2>
+            <p class="paywall-subtitle" data-i18n="pw_subtitle">Ochrana před pokutami a podvody + AI osobní průvodce na celou cestu.</p>
+        </div>
+
+        <div class="paywall-features">
+            <div class="feature-item">
+                <span class="feature-icon">🛡️</span>
+                <span data-i18n="pw_f1">Ušetřete až 1 500 Kč na pokutách v MHD díky jasným pravidlům.</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">💸</span>
+                <span data-i18n="pw_f2">Radar na férové směnárny a návod, jak odmítnout poplatky ATM.</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🤖</span>
+                <span data-i18n="pw_f3">AI Plánovač programu na míru podle vaší aktuální polohy.</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🗺️</span>
+                <span data-i18n="pw_f4">Lokální tipy mimo hlavní turistické davy (Praha 1 až Praha 7).</span>
+            </div>
+        </div>
+
+        <div class="plans-container">
+            <!-- MODEL A: 7-DAY PASS -->
+            <div class="plan-card featured" id="planA" onclick="selectPlan('A')">
+                <div class="plan-badge" data-i18n="pw_popular">Nejoblíbenější</div>
+                <div class="plan-header">
+                    <span class="plan-title">7-Day Prague Pass</span>
+                    <span class="plan-price">4,99 €</span>
+                </div>
+                <p class="plan-desc" data-i18n="pw_desc_a">Jednorázová platba na 7 dní. Ideální pro dovolenou či víkend.</p>
+            </div>
+
+            <!-- MODEL C: LIFETIME PASS -->
+            <div class="plan-card" id="planC" onclick="selectPlan('C')">
+                <div class="plan-header">
+                    <span class="plan-title">Lifetime Unlimited Pass</span>
+                    <span class="plan-price">9,99 €</span>
+                </div>
+                <p class="plan-desc" data-i18n="pw_desc_c">Jednorázová platba navždy. Všechny budoucí aktualizace v ceně.</p>
+            </div>
+        </div>
+
+        <button class="buy-btn" id="buyBtn" onclick="processPurchase()" data-i18n="pw_btn_buy">Odemknout Pass za 4,99 €</button>
+
+        <p class="paywall-footer-note" data-i18n="pw_note">
+            100% Jednorázová platba. Žádné skryté poplatky ani automatické předplatné.
+        </p>
     </div>
 
     <script>
         let currentLang = 'cs';
+        let selectedPlan = 'A';
 
-        // Complete Translations for 6 Languages
+        // Multijazyčný slovník
         const i18n = {
             cs: {
                 search_ph: "Vyhledat v celém průvodci...",
                 back: "← Zpět do nabídky",
                 open_link: "Oficiální web",
                 open_map: "Navigovat v mapě",
+                btn_pass: "Získat Pass",
                 title_scams: "Pasti & Varování", sub_scams: "Směnárny, taxi, trdelníky",
                 title_doprava: "Doprava & MHD", sub_doprava: "Lítačka, vlaky, taxi, P+R",
                 title_sport: "Sport & Aktivita", sub_sport: "Zápasy, běh, kola, Vltava",
@@ -400,13 +642,25 @@
                 title_smenarny: "Směnárny & Spropitné", sub_smenarny: "Poctivý kurz, spropitné 10%",
                 title_wifi: "Wi-Fi & Work-Friendly", sub_wifi: "Notebook kavárny, zdarma net",
                 title_pohotovost: "První Pomoc & Policie", sub_pohotovost: "Nonstop lékárny, ambasády",
-                title_ai: "AI Plánovač Trasy", sub_ai: "Program na míru dle polohy"
+                title_ai: "AI Plánovač Trasy", sub_ai: "Program na míru dle polohy",
+                pw_title: "PragueGuard Pass",
+                pw_subtitle: "Ochrana před pokutami a podvody + AI průvodce na celou cestu.",
+                pw_f1: "Ušetřete až 1 500 Kč na pokutách v MHD díky jasným pravidlům.",
+                pw_f2: "Radar na férové směnárny a návod, jak odmítnout poplatky ATM.",
+                pw_f3: "AI Plánovač programu na míru podle vaší aktuální polohy.",
+                pw_f4: "Lokální tipy mimo hlavní turistické davy (Praha 1 až Praha 7).",
+                pw_popular: "Nejoblíbenější",
+                pw_desc_a: "Jednorázová platba na 7 dní. Ideální pro dovolenou či víkend.",
+                pw_desc_c: "Jednorázová platba navždy. Všechny budoucí aktualizace v ceně.",
+                pw_btn_buy: "Odemknout Pass za 4,99 €",
+                pw_note: "100% Jednorázová platba. Žádné skryté poplatky ani automatické předplatné."
             },
             en: {
                 search_ph: "Search across the guide...",
                 back: "← Back to menu",
                 open_link: "Official website",
                 open_map: "Navigate on map",
+                btn_pass: "Get Pass",
                 title_scams: "Traps & Warnings", sub_scams: "Exchange, taxi, scams",
                 title_doprava: "Transport & Public", sub_doprava: "Passes, trains, taxi, P+R",
                 title_sport: "Sports & Active", sub_sport: "Matches, running, bikes, river",
@@ -418,136 +672,57 @@
                 title_smenarny: "Exchange & Tipping", sub_smenarny: "Fair rates, 10% tipping",
                 title_wifi: "Wi-Fi & Work-Friendly", sub_wifi: "Laptop cafes, free net",
                 title_pohotovost: "Emergency & Police", sub_pohotovost: "24/7 Pharmacy, embassies",
-                title_ai: "AI Itinerary Planner", sub_ai: "Tailored plan by location"
-            },
-            de: {
-                search_ph: "Suchen Sie im Reiseführer...",
-                back: "← Zurück zum Menü",
-                open_link: "Offizielle Website",
-                open_map: "Auf Karte navigieren",
-                title_scams: "Fallen & Warnungen", sub_scams: "Wechselstuben, Taxis",
-                title_doprava: "Transport & ÖPNV", sub_doprava: "Tickets, Züge, Taxi, P+R",
-                title_sport: "Sport & Aktiv", sub_sport: "Spiele, Laufen, Rad, Moldau",
-                title_kultura: "Kultur & Events", sub_kultura: "Theater, Ausstellungen",
-                title_gastro: "Gastro & Kaffee", sub_gastro: "Kaffee, Restaurants",
-                title_pamatky: "Sehenswürdigkeiten", sub_pamatky: "Burg, Brücke, Aussicht",
-                title_uschovna: "Gepäckaufbewahrung", sub_uschovna: "Bounce, Bahnhöfe",
-                title_wc_voda: "WC & Trinkwasser", sub_wc_voda: "Trinkbrunnen, WC-Karte",
-                title_smenarny: "Wechseln & Trinkgeld", sub_smenarny: "Faire Kurse, 10% Trinkgeld",
-                title_wifi: "WLAN & Arbeitsfreundlich", sub_wifi: "Laptop-Cafés, Gratis WLAN",
-                title_pohotovost: "Notfall & Polizei", sub_pohotovost: "24/7 Apotheken, Botschaften",
-                title_ai: "KI-Routenplaner", sub_ai: "Maßgeschneiderter Plan"
-            },
-            fr: {
-                search_ph: "Rechercher dans le guide...",
-                back: "← Retour au menu",
-                open_link: "Site officiel",
-                open_map: "Naviguer sur carte",
-                title_scams: "Pièges & Avertissements", sub_scams: "Change, taxi, arnaques",
-                title_doprava: "Transports Publics", sub_doprava: "Billets, trains, taxi, P+R",
-                title_sport: "Sports & Activités", sub_sport: "Matchs, course, vélo, Moldau",
-                title_kultura: "Culture & Événements", sub_kultura: "Théâtres, expos, concerts",
-                title_gastro: "Gastro & Cafés", sub_gastro: "Cafés, restaurants, bistrots",
-                title_pamatky: "Monuments & Jardins", sub_pamatky: "Château, pont, panoramas",
-                title_uschovna: "Consigne à Bagages", sub_uschovna: "Bounce, Radical, gares",
-                title_wc_voda: "WC & Eau Potable", sub_wc_voda: "Fontaines gratuites, carte WC",
-                title_smenarny: "Change & Pourboires", sub_smenarny: "Taux justes, pourboire 10%",
-                title_wifi: "Wi-Fi & Espace Travail", sub_wifi: "Cafés partenaires, Wi-Fi",
-                title_pohotovost: "Urgences & Police", sub_pohotovost: "Pharmacies 24/7, ambassades",
-                title_ai: "Planificateur IA", sub_ai: "Itinéraire personnalisé"
-            },
-            es: {
-                search_ph: "Buscar en la guía...",
-                back: "← Volver al menú",
-                open_link: "Sitio web oficial",
-                open_map: "Navegar en mapa",
-                title_scams: "Trampas & Advertencias", sub_scams: "Cambio, taxi, estafas",
-                title_doprava: "Transporte Público", sub_doprava: "Billetes, trenes, taxi, P+R",
-                title_sport: "Deportes & Activo", sub_sport: "Partidos, correr, bicis, Moldava",
-                title_kultura: "Cultura & Eventos", sub_kultura: "Teatros, exposiciones",
-                title_gastro: "Gastronomía & Café", sub_gastro: "Cafés, restaurantes",
-                title_pamatky: "Monumentos & Jardines", sub_pamatky: "Castillo, puente, miradores",
-                title_uschovna: "Consigna de Equipaje", sub_uschovna: "Bounce, Radical, estaciones",
-                title_wc_voda: "Aseos & Agua Potable", sub_wc_voda: "Fuentes gratis, mapa aseos",
-                title_smenarny: "Cambio & Propina", sub_smenarny: "Cambio justo, propina 10%",
-                title_wifi: "Wi-Fi & Para Trabajar", sub_wifi: "Cafés con Wi-Fi gratis",
-                title_pohotovost: "Emergencias & Policía", sub_pohotovost: "Farmacias 24/7, embajadas",
-                title_ai: "Planificador IA", sub_ai: "Plan a medida por ubicación"
-            },
-            it: {
-                search_ph: "Cerca nella guida...",
-                back: "← Torna al menu",
-                open_link: "Sito ufficiale",
-                open_map: "Naviga sulla mappa",
-                title_scams: "Trappole & Avvisi", sub_scams: "Cambiovaluta, taxi, truffe",
-                title_doprava: "Trasporti Pubblici", sub_doprava: "Biglietti, treni, taxi, P+R",
-                title_sport: "Sport & Attività", sub_sport: "Partite, corsa, bici, Moldava",
-                title_kultura: "Cultura & Eventi", sub_kultura: "Teatri, mostre, concerti",
-                title_gastro: "Gastro & Caffè", sub_gastro: "Caffè, ristoranti, bistrot",
-                title_pamatky: "Monumenti & Giardini", sub_pamatky: "Castello, ponte, panorami",
-                title_uschovna: "Deposito Bagagli", sub_uschovna: "Bounce, Radical, stazioni",
-                title_wc_voda: "Bagni & Acqua Potabile", sub_wc_voda: "Fontanelle gratis, mappa bagni",
-                title_smenarny: "Cambio & Mancia", sub_smenarny: "Tassi equi, mancia 10%",
-                title_wifi: "Wi-Fi & Lavoro", sub_wifi: "Caffè con Wi-Fi, gratis net",
-                title_pohotovost: "Emergenze & Polizia", sub_pohotovost: "Farmacie 24/7, ambasciate",
-                title_ai: "Pianificatore IA", sub_ai: "Itinerario personalizzato"
+                title_ai: "AI Itinerary Planner", sub_ai: "Tailored plan by location",
+                pw_title: "PragueGuard Pass",
+                pw_subtitle: "Avoid fines, exchange traps and get a personal AI itinerary.",
+                pw_f1: "Save up to €60 on public transport fines with validator alerts.",
+                pw_f2: "Fair currency exchange radar & ATM fee prevention guide.",
+                pw_f3: "AI Itinerary generator based on your current location.",
+                pw_f4: "Local secrets away from tourist crowds (Districts P1-P7).",
+                pw_popular: "Most Popular",
+                pw_desc_a: "One-time payment for 7 days full access. Ideal for a trip.",
+                pw_desc_c: "One-time payment forever. All future updates included.",
+                pw_btn_buy: "Unlock Pass for €4.99",
+                pw_note: "100% One-time payment. No hidden auto-renewals."
             }
         };
 
-        // Comprehensive Database with Guaranteed Domain Roots and Google Maps Links
+        // Databáze
         const db = {
             scams: [
-                { name: "Nevýhodné směnárny (Centrum & Euronet)", desc: "POZOR na směnárny kolem Staroměstského náměstí s poplatky až 28 % nebo nevýhodným kurzem. Používejte proverené směnárny (Mango Exchange / Alfa Exchange na Jindřišské).", tag: "Kritické varování", map: "https://www.google.com/maps/search/Mango+Exchange+Prague" },
-                { name: "Falešní revizoři v metro stanicích", desc: "Revizor DPP musí mít odznak a průkaz. Vždy vyžadujte předložení služebního průkazu. Pokutu neplaťte v hotovosti bez oficiálního stvrzenkového dokladu.", tag: "Bezpečnost" },
-                { name: "Předražené jídlo na váhu (Staroměstské nám.)", desc: "Stánky se šunkou uvádí cenu např. 100 CZK za 100g, ale naservírují vám 700g porci a požadují přes 700 CZK. Předem specifikujte přesnou váhu.", tag: "Gastro past" },
-                { name: "Předražené pouliční trdelníky", desc: "Trdelník není tradiční pražský pokrm. Běžná cena v pekárně je do 70 CZK, v turistickém centru zaplatíte i 180 CZK.", tag: "Cenová past" }
+                { name: "Nevýhodné směnárny (Centrum & Euronet)", desc: "POZOR na směnárny s poplatky až 28 % nebo nevýhodným kurzem. Používejte prověřené směnárny (Mango Exchange / Alfa Exchange na Jindřišské).", tag: "Kritické varování", map: "https://www.google.com/maps/search/Mango+Exchange+Prague" },
+                { name: "Falešní revizoři v metro stanicích", desc: "Revizor DPP musí mít odznak a průkaz. Pokutu neplaťte v hotovosti bez oficiálního stvrzenkového dokladu.", tag: "Bezpečnost" },
+                { name: "Předražené jídlo na váhu", desc: "Stánky se šunkou uvádí cenu za 100g, ale naservírují vám 700g porci. Předem specifikujte přesnou váhu.", tag: "Gastro past" }
             ],
             doprava: {
-                mhd: [{ name: "PID Lítačka (Oficiální Aplikace)", desc: "Jízdenka zakoupená v aplikaci platí až 2 minuty po aktivaci!", url: "https://www.pid.cz", map: "https://www.google.com/maps/search/Prague+Public+Transport" }],
-                vlaky: [{ name: "České dráhy & Hlavní nádraží", desc: "Národní železniční dopravce a hlavní vlakový terminál.", url: "https://www.cd.cz", map: "https://www.google.com/maps/search/Hlavni+nadrazi+Prague" }],
-                taxi: [{ name: "Liftago / Bolt / Uber", desc: "Oficiální cenový strop města stanovený magistrátem je 36 Kč/km.", url: "https://www.liftago.cz" }],
-                p_r: [{ name: "Záchytná parkoviště P+R & MPLA", desc: "Levné parkování u metra (50–100 Kč/den) s aplikací MPLA.", url: "https://www.pid.cz", map: "https://www.google.com/maps/search/P%2BR+parking+Prague" }]
+                mhd: [{ name: "PID Lítačka (Oficiální Aplikace)", desc: "Jízdenka v aplikaci platí až 2 minuty po aktivaci!", url: "https://www.pid.cz", map: "https://www.google.com/maps/search/Prague+Public+Transport" }],
+                vlaky: [{ name: "České dráhy & Hlavní nádraží", desc: "Národní železniční dopravce a terminál.", url: "https://www.cd.cz", map: "https://www.google.com/maps/search/Hlavni+nadrazi+Prague" }],
+                taxi: [{ name: "Liftago / Bolt / Uber", desc: "Oficiální cenový strop města je 36 Kč/km.", url: "https://www.liftago.cz" }],
+                p_r: [{ name: "Parkování P+R", desc: "Parkování u metra (50–100 Kč/den).", url: "https://www.pid.cz", map: "https://www.google.com/maps/search/P%2BR+parking+Prague" }]
             },
             sport: [
-                { name: "Fotbalové zápasy (AC Sparta & SK Slavia)", desc: "Oficiální ligové a evropské zápasy v epet ARENĚ (Letná) nebo Fortuna Areně (Eden).", url: "https://www.sparta.cz", map: "https://www.google.com/maps/search/epet+ARENA+Prague" },
-                { name: "Hokej v O2 Areně (HC Sparta Praha)", desc: "Největší hokejová aréna v ČR a mezinárodní zápasy.", url: "https://www.o2arena.cz", map: "https://www.google.com/maps/search/O2+Arena+Prague" },
-                { name: "Běh & Inline v parcích (Stromovka & Ladronka)", desc: "Nejlepší asfaltové a přírodní okruhy v Praze pro sportovce zdarma.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/Stromovka+Park+Prague" },
-                { name: "Paddleboardy & Kajaky na Vltavě", desc: "Půjčovny a sportovní vyžití na Náplavce a Císařské louce.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/Naplavka+Prague" }
+                { name: "AC Sparta & SK Slavia Fotbal", desc: "Zápasy v epet ARENĚ nebo Fortuna Areně.", url: "https://www.sparta.cz", map: "https://www.google.com/maps/search/epet+ARENA+Prague" },
+                { name: "Běh v parcích (Stromovka & Ladronka)", desc: "Nejlepší běžecké okruhy v Praze zdarma.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/Stromovka+Park+Prague" }
             ],
             uschovna: [
-                { name: "Bounce & Radical Storage", desc: "Síť prověřených úschoven zavazadel v lokálních obchodech a kavárnách od 5 EUR/den.", url: "https://usebounce.com", map: "https://www.google.com/maps/search/luggage+storage+prague" },
-                { name: "Úschovna Hlavní nádraží & ÚAN Florenc", desc: "Samoobslužné skříňky přímo na vlakovém a autobusovém nádraží.", url: "https://www.cd.cz", map: "https://www.google.com/maps/search/Hlavni+nadrazi+Prague" }
+                { name: "Bounce & Radical Storage", desc: "Úschovny v kavárnách od 5 EUR/den.", url: "https://usebounce.com", map: "https://www.google.com/maps/search/luggage+storage+prague" }
             ],
             wc_voda: [
-                { name: "Mapa pítek s pitnou vodou zdarma", desc: "V centru Prahy je přes 40 pítek s čerstvou pitnou vodou zdarma.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/drinking+fountain+prague" },
-                { name: "Veřejné toalety v metru a parcích", desc: "Standardní poplatek je 10–20 Kč (vyžaduje mince nebo bezkontaktní kartu).", url: "https://www.dpp.cz", map: "https://www.google.com/maps/search/public+toilet+prague" }
+                { name: "Pítka s pitnou vodou zdarma", desc: "Přes 40 pítek v centru zdarma.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/drinking+fountain+prague" }
             ],
             smenarny: [
-                { name: "Poctivé směnárny (Mango & Alfa Exchange)", desc: "Garantovaný středový kurz ČNB bez 0% commission triků.", url: "https://www.cnb.cz", map: "https://www.google.com/maps/search/Mango+Exchange+Prague" },
-                { name: "Pravidla spropitného v ČR", desc: "Spropitné není povinné, ale běžně se dává 10 % za dobrou obsluhu.", url: "https://www.prague.eu" }
+                { name: "Poctivé směnárny (Mango & Alfa)", desc: "Středový kurz ČNB bez poplatků.", url: "https://www.cnb.cz", map: "https://www.google.com/maps/search/Mango+Exchange+Prague" }
             ],
-            wifi: [
-                { name: "Work-Friendly Kavárny s rychlou Wi-Fi", desc: "Kavárna co hledá jméno, SmetanaQ, Opero coworking s rychlým připojením.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/SmetanaQ+Prague" }
-            ],
-            pohotovost: [
-                { name: "Nonstop lékárny 24/7 (Praha 1 & Praha 5)", desc: "Lékárna U Sv. Ludmily (Nám. Míru) a Lékárna Na Homolce.", url: "https://www.policie.cz", map: "https://www.google.com/maps/search/Lekarna+U+Sv.+Ludmily+Prague" },
-                { name: "Turistická Policie & Tísňové linky", desc: "Tísňová linka EU: 112, Policie ČR: 158, Záchranka: 155.", url: "https://www.policie.cz" }
-            ],
-            gastro: [
-                { name: "EMA Espresso Bar & Café Louvre", desc: "Špičková káva u Masarykova nádraží i historická kavárna z roku 1902.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/Cafe+Louvre+Prague" }
-            ],
-            kultura: [
-                { name: "Národní divadlo & DOX Holešovice", desc: "Kultura od klasiky na Vltavském nábřeží po současné umění v Holešovicích.", url: "https://www.narodni-divadlo.cz", map: "https://www.google.com/maps/search/National+Theatre+Prague" }
-            ],
-            pamatky: [
-                { name: "Pražský hrad & Karlův most", desc: "Nejznámější historické dominanty a gotický most z roku 1357.", url: "https://www.hrad.cz", map: "https://www.google.com/maps/search/Prague+Castle" }
-            ]
+            wifi: [{ name: "Work-Friendly Kavárny", desc: "SmetanaQ a Opero s rychlou Wi-Fi.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/SmetanaQ+Prague" }],
+            pohotovost: [{ name: "Nonstop lékárny 24/7", desc: "Lékárna U Sv. Ludmily.", url: "https://www.policie.cz", map: "https://www.google.com/maps/search/Lekarna+U+Sv.+Ludmily+Prague" }],
+            gastro: [{ name: "EMA Espresso Bar & Café Louvre", desc: "Výběrová káva i historie.", url: "https://www.prague.eu", map: "https://www.google.com/maps/search/Cafe+Louvre+Prague" }],
+            kultura: [{ name: "Národní divadlo & DOX", desc: "Klasika i moderní umění.", url: "https://www.narodni-divadlo.cz", map: "https://www.google.com/maps/search/National+Theatre+Prague" }],
+            pamatky: [{ name: "Pražský hrad & Karlův most", desc: "Historické dominanty Prahy.", url: "https://www.hrad.cz", map: "https://www.google.com/maps/search/Prague+Castle" }]
         };
 
-        // Language changehandler
         function changeLanguage() {
             currentLang = document.getElementById('langSelect').value;
-            const t = i18n[currentLang];
+            const t = i18n[currentLang] || i18n['en'];
 
             document.getElementById('globalSearch').placeholder = t.search_ph;
             document.getElementById('backBtn').innerText = t.back;
@@ -558,12 +733,11 @@
             });
         }
 
-        // Open Full Screen View
         function openView(section) {
             const view = document.getElementById('fullScreenView');
             const title = document.getElementById('viewTitle');
             const body = document.getElementById('viewBody');
-            const t = i18n[currentLang];
+            const t = i18n[currentLang] || i18n['en'];
 
             view.style.display = 'flex';
             body.innerHTML = '';
@@ -614,7 +788,7 @@
                         </div>
                     `;
                 });
-                body.innerHTML = html || '<p style="padding:20px; text-align:center; color:var(--text-secondary);">Načítání položek z databáze...</p>';
+                body.innerHTML = html || '<p style="padding:20px; text-align:center;">Načítání z databáze...</p>';
             }
         }
 
@@ -626,7 +800,7 @@
             const val = document.getElementById('dopravaFilter').value;
             const container = document.getElementById('dopravaSubContainer');
             const items = db.doprava[val] || [];
-            const t = i18n[currentLang];
+            const t = i18n[currentLang] || i18n['en'];
 
             let html = '';
             items.forEach(item => {
@@ -647,7 +821,7 @@
         function runAI() {
             const dist = document.getElementById('aiDistrict').value;
             const out = document.getElementById('aiOutput');
-            out.innerText = `🗓 Program pro ${dist}:\n\n1. 09:30 - Snídaně a výběrová káva\n2. 11:00 - Prohlídka památek a výhledy\n3. 13:30 - Oběd v prověřeném podniku\n4. 16:00 - Relaxace v parku / sportovní aktivita`;
+            out.innerText = `🗓 Program pro ${dist}:\n\n1. 09:30 - Snídaně a výběrová káva\n2. 11:00 - Prohlídka památek bez davů\n3. 13:30 - Oběd v prověřeném podniku\n4. 16:00 - Relaxace v parku / sportovní aktivita`;
             out.style.display = 'block';
         }
 
@@ -656,6 +830,37 @@
             document.querySelectorAll('.tile').forEach(tile => {
                 tile.style.display = tile.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
             });
+        }
+
+        /* Paywall funkce */
+        function openPaywall() {
+            document.getElementById('paywallView').style.display = 'flex';
+        }
+
+        function closePaywall() {
+            document.getElementById('paywallView').style.display = 'none';
+        }
+
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            const cardA = document.getElementById('planA');
+            const cardC = document.getElementById('planC');
+            const btn = document.getElementById('buyBtn');
+
+            if (plan === 'A') {
+                cardA.classList.add('featured');
+                cardC.classList.remove('featured');
+                btn.innerText = currentLang === 'cs' ? 'Odemknout Pass za 4,99 €' : 'Unlock Pass for €4.99';
+            } else {
+                cardC.classList.add('featured');
+                cardA.classList.remove('featured');
+                btn.innerText = currentLang === 'cs' ? 'Odemknout Lifetime za 9,99 €' : 'Unlock Lifetime for €9.99';
+            }
+        }
+
+        function processPurchase() {
+            alert(`In-App platba spuštěna pro plán ${selectedPlan}. V produkční verzi se otevře Apple Pay / Google Pay rozhraní.`);
+            closePaywall();
         }
     </script>
 </body>
